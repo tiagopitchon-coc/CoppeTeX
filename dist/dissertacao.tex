@@ -1,0 +1,245 @@
+%%
+%% This is file `dissertaca.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% coppe.dtx  (with options: `example')
+%% 
+%% This is a sample monograph which illustrates the use of `coppe' document
+%% class and `coppe-unsrt' BibTeX style.
+%% 
+%% \CheckSum{1656}
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+%%
+\documentclass[msc]{coppe}
+
+\usepackage{booktabs}% tabelas mais bonitas
+\usepackage{rotating}% rodando coisas, como tabelas
+\usepackage{longtable} % tabelas longas
+\usepackage[most]{tcolorbox} % caixas de texto
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{listings} % para usar listagens
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} % Apenas se usar o compilador pdfLaTeX
+\usepackage{lmodern} % Versão vetorizada de alta qualidade
+
+\makelosymbols
+\makeloabbreviations
+
+\begin{document}
+  \title{Estimativa de Vazão com Sensoriamento Acústico Distribuído (DAS) em Fibra Óptica: Aplicação ao Fraturamento Hidráulico no Poço MIP-3H (MSEEL)}
+  \foreigntitle{Thesis Title}
+  \author{Tiago}{Pitchon Sampaio}
+  \advisor{Prof.ª}{Juliana}{Souza Baioco}{D.Sc.}
+
+  \examiner{Prof.ª}{Juliana Souza Baioco}{D.Sc.}
+  \examiner{Prof.}{José Luis Drummond Alves}{D.Sc.}
+  \examiner{Prof.}{Natanael Nunes de Moura Junior}{D.Sc.}
+  \examiner{Dr.}{Emilio José Rocha Coutinho}{Ph.D.}
+  \department{PEC}
+  \date{08}{2026}
+
+  \keyword{Sensoriamento acústico distribuído por fibra-óptica}
+  \keyword{Estimativa de vazão de injeção em poço canhoneado}
+  \keyword{Aprendizado de máquina}
+
+  \maketitle
+
+  \frontmatter
+  \dedication{A alguém cujo valor é digno desta dedicatória.}
+
+  \chapter*{Agradecimentos}
+
+  Gostaria de agradecer a todos.
+
+  \begin{abstract}
+
+  Apresenta-se, nesta tese, ...
+
+  \end{abstract}
+
+  \begin{foreignabstract}
+
+  In this work, we present ...
+
+  \end{foreignabstract}
+
+  \tableofcontents
+  \listoffigures
+  \listoftables
+  \printlosymbols
+  \printloabbreviations
+
+  \mainmatter
+
+  %% Capítulo 1 - Introdução
+  \chapter{Introdução}
+
+  \section{Contexto e motivação}
+  O desenvolvimento de campos petrolíferos em áreas \textit{offshore} cada vez mais complexas torna necessário aprimorar o monitoramento de poços e de reservatórios a fim de mitigar riscos econômicos e ambientais nos projetos. Dentre exemplos de ferramentas já consolidadas, há sensores de pressão e de temperatura de fundo de poço (PDG em inglês), sísmica 4D e ferramentas de perfilagem de produção (PLT em inglês). Estas tecnologias permitem otimizar a operação dos sistemas de produção, reduzir incertezas na interpretação do reservatório e subsidiar decisões de engenharia ao longo do ciclo de vida do campo, além de aprimorar a segurança em poços e sistemas de coleta.
+
+  Porém, essas soluções convencionais oferecem apenas informações pontuais ao longo do poço, como o PDG, ou sua aquisição ocorre em intervalos longos de tempo, como o PLT. Para preencher esta lacuna, novas ferramentas têm sido desenvolvidas, havendo destaque para o sensoriamento distribuído por fibra óptica (DFOS em inglês). Segundo \citep{introduction_hartog_2017} e \citep{ashry}, um pulso de luz coerente é injetado na fibra por um equipamento denominado interrogador. Ao longo do trajeto, uma pequena fração do sinal é retroespalhada devido a interações com irregularidades microscópicas do material. Esse fenômeno, conhecido como retroespalhamento, permite que parte do sinal retorne ao interrogador, trazendo informações sobre as condições ao longo da fibra. As características do sinal retroespalhado – como intensidade, fase e frequência – são influenciadas por variações de temperatura e deformações mecânicas, fazendo com que a fibra óptica atue como um sensor distribuído capaz de detectar perturbações ao longo de todo o poço.
+  
+  Os bons resultados apresentados ao longo das últimas décadas em campos terrestres, e em outras indústrias também, têm impulsionado o desenvolvimento da ferramenta, que já conta com uma gama de variações, onde a principal diferença reside no foco do estudo que orienta a forma de processamento e interpretação do sinal. Além disso, houve um recente aumento no esforço de se adaptar o DFOS para o ambiente \textit{offshore}. Dentre esses desafios, destacam-se a criação de novos conectores, que permitem a passagem do sinal por árvores de Natal molhadas (ANM) e \textit{packers}. Outro ponto crítico diz respeito à transmissão, processamento e armazenamento dos dados que podem chegar a \textit{terabytes} por dia por poço.
+  
+  Uma diferença significativa entre usos em campos \textit{onshore} e \textit{offshore} é o local de instalação da fibra óptica, que acaba orientando os objetivos dos estudos e as tecnologias utilizadas. Para poços terrestres, ela é instalada externamente à coluna de revestimento e apresenta forte acoplamento mecânico às rochas adjacentes através do cimento que preenche o espaço anular. Isto favorece estudos sobre o reservatório e camadas subjacentes, como evolução de fraturas. Já em poços marítimos, a instalação não pode ocorrer desta forma por questões de segurança, sendo presa externamente à coluna de produção ou de injeção, o que a torna mais sensível ao escoamento interno no poço.
+  
+  Uma revisão bibliográfica sobre aplicações reais em campos marítimos, além de desafios encontrados e pesquisas em andamento, foi realizada em \citet{otc_pitchon}, destacando-se: perfil de sísmica vertical; perfil de produção/injeção; identificação de problemas de garantia de escoamento; monitoramento de integridade de poços e; estimativa de vazão de fluidos. Em suma, observou-se que esta é uma área com grande produção técnica e científica no momento e com investimentos consideráveis em pesquisas que correlacionem as medições na fibra óptica com fenômenos físicos de interesse, tanto em laboratório quanto em casos reais.
+  
+  Ainda segundo \citet{otc_pitchon}, diversas iniciativas têm buscado correlacionar o escoamento de fluidos através de restrições - como válvulas, estrangulamentos e canhoneados - com as perturbações detectadas na fibra óptica. Nesse contexto, destaca-se o sensoriamento acústico distribuído (DAS em inglês), baseado no retroespalhamento Rayleigh e associado à detecção de deformações dinâmicas na fibra, induzidas por vibrações e propagação de ondas acústicas no sistema.
+  
+  Essas abordagens visam aplicações como a estimativa de vazão monofásica e multifásica, detecção de chegada de fases indesejadas e caracterização de regimes de escoamento. Dentre esses objetivos, a estimativa de vazão em condições reais de campo ainda representa um desafio relevante, constituindo o foco do presente trabalho.
+
+  \section{Objetivos}
+  O objetivo geral desta dissertação é avaliar a aplicabilidade do sensoriamento acústico distribuído (DAS em inglês) na estimativa de vazão de um escoamento através de restrições.
+  
+  Devido à ausência de bases de dados públicas contendo medições em condições \textit{offshore} ou em experimentos laboratoriais representativos, optou-se pela utilização da base de dados do poço MIP-3H, pertencente ao projeto MSEEL \citep{mseel_site}. Este poço foi perfurado em um reservatório não convencional de gás com o propósito de avaliar diferentes técnicas de fraturamento hidráulico. Nesse contexto, investiga-se a resposta associada às deformações dinâmicas, registradas pelo DAS, induzidas pelo escoamento turbulento através dos canhoneados.
+  
+  Dessa forma, os objetivos específicos são:
+  \begin{itemize}
+      \item Obter e organizar os dados provenientes da base MSEEL, preparando-os para as etapas de análise;
+      \item Realizar análise exploratória dos dados, visando o alinhamento temporal e espacial das diferentes variáveis e a caracterização do sinal DAS;
+      \item Definir e aplicar um filtro adequado ao sinal DAS, incluindo a análise do espectro de frequências por meio de espectrogramas para seleção da banda de interesse;
+      \item Extrair e calcular o atributo de energia do sinal DAS como métrica representativa das perturbações associadas ao escoamento;
+      \item Avaliar a relação entre o atributo de energia do sinal DAS e parâmetros operacionais de fraturamento, utilizando métricas de correlação e dependência estatística;
+      \item Utilizar modelos aditivos generalizados (GAM em inglês) como ferramenta de análise estatística para investigar relações não lineares entre as variáveis;
+      \item Identificar as variáveis mais relevantes para a estimativa de vazão e;
+      \item Desenvolver modelos preditivos para estimativa de vazão utilizando técnicas de aprendizado de máquina.
+  \end{itemize}
+
+  \section{Estrutura da dissertação}
+  Este trabalho é dividido em seis capítulos, iniciando por este, que apresenta o contexto e a motivação do estudo, os objetivos gerais e específicos e uma breve descrição da estrutura da dissertação.
+  
+  O Capítulo 2 apresenta a fundamentação teórica do sensoriamento distribuído por fibra óptica (DFOS em inglês), com foco no sensoriamento acústico distribuído (DAS em inglês). Em seguida, são revisadas aplicações do DAS no monitoramento do escoamento em poços de petróleo \textit{offshore}. Por fim, é apresentado o estado da arte no desenvolvimento de métodos para estimativa de vazão a partir dessas tecnologias.
+  
+  O Capítulo 3 apresenta o projeto \textit{Marcellus Shale Energy and Environment Laboratory} (MSEEL) e o poço MIP-3H, dos quais foram obtidos os dados de fraturamento hidráulico e de DAS utilizados neste trabalho.
+  
+  O Capítulo 4 descreve a metodologia adotada. Inicialmente, realiza-se uma análise exploratória dos dados, visando o alinhamento temporal e espacial das diferentes variáveis e a caracterização do sinal DAS. Na sequência, define-se e aplica-se um filtro ao sinal, com base na análise espectral e na avaliação do comportamento do atributo de energia, buscando remover efeitos associados a fenômenos fora do escopo deste trabalho. A relação entre o sinal, representado pelo atributo de energia, e os parâmetros operacionais do fraturamento hidráulico é investigada por meio de métricas de correlação, medidas de dependência estatística e modelos aditivos generalizados (GAM em inglês). Por fim, são apresentados os modelos de aprendizado de máquina utilizados para avaliar a capacidade preditiva da vazão de injeção a partir do atributo de energia na região dos canhoneados.
+  
+  O Capítulo 5 apresenta os resultados obtidos, com destaque para a importância da adequada seleção do filtro, a relação não monotônica entre a concentração de propante e o atributo de energia, a identificação das variáveis mais relevantes e o desempenho dos modelos preditivos. Os resultados são discutidos à luz de fundamentos físicos, buscando associar o escoamento turbulento às respostas observadas no sinal DAS.
+  
+  Por fim, o Capítulo 6 apresenta as conclusões do trabalho acerca do uso do DAS na estimativa de vazão em escoamentos com restrições, bem como sugestões para trabalhos futuros.
+  
+  \chapter{Fundamentos e revisão da literatura}
+
+  \section{Fundamentos de DFOS e DAS}
+
+  Os conceitos apresentados neste item baseiam-se nas seguintes referências clássicas da área de sensoriamento distribuído por fibra óptica (DFOS em inglês): \citet{introduction_hartog_2017}, \citet{dts_shell} e \citet{dts_slb}, complementadas por trabalhos mais recentes, como \citet{ashry}, \citet{kavousi_2018}, \citet{he_2021}, \citet{soroush_2022} e; pelo curso de \citet{curso_dria}.
+
+  O reflectômetro óptico no domínio do tempo (OTDR em inglês) foi desenvolvido para identificar atenuações, falhas reflexivas e imperfeições em fibras ópticas voltadas à transmissão de dados. Ele consiste em um equipamento chamado interrogador, que emite uma série de pulsos de luz em uma das extremidades da fibra e monitora o sinal refletido de volta, conforme ilustrado na \autoref{fig:otdr}.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.8\linewidth]{dist//figuras/desenho_esquemático_OTDR.png}
+      \caption{Desenho esquemático de um OTDR. Adaptado de \citet{introduction_hartog_2017}.}
+      \label{fig:otdr}
+  \end{figure}
+
+  Dentre os mecanismos de perda de energia do pulso de luz incidente, destaca-se o retroespalhamento, que constitui o fenômeno de interesse neste trabalho, pois, embora apresente intensidade significativamente menor do que as reflexões associadas a descontinuidades na fibra, é capaz de fornecer informações sobre as condições ambientais ao longo de todo o seu comprimento.
+
+  Flutuações microscópicas no índice de refração ao longo do núcleo da fibra óptica atuam como centros de espalhamento, que desviam parte da energia da onda incidente e a reemitem em diferentes direções. Esses fenômenos decorrem de heterogeneidades cuja escala espacial é significativamente menor que o comprimento de onda da luz incidente. Os principais tipos de retroespalhamento considerados no DFOS são classificados de acordo com o processo de interação entre os fótons e o material da fibra.
+
+  O primeiro é o retroespalhamento Rayleigh, associado a flutuações microscópicas no índice de refração originadas durante o processo de fabricação da fibra. Nesse caso, o processo é elástico, ou seja, a energia dos fótons é preservada, e a onda reemitida possui a mesma frequência da onda incidente.
+  
+  Os retroespalhamentos Brillouin e Raman, por sua vez, são processos inelásticos, nos quais ocorre troca de energia entre os fótons e o material da fibra. Se o material absorve energia, o processo é denominado Stokes; caso contrário, anti-Stokes. No retroespalhamento Brillouin, essa interação ocorre com ondas acústicas (fônons) na estrutura do material. Já no retroespalhamento Raman, a interação está associada a modos vibracionais moleculares das ligações atômicas.
+  
+  Quando um pulso de luz coerente — isto é, com fase bem definida e estreita banda espectral — é injetado na fibra, o sinal retroespalhado ao longo da sua extensão apresenta um espectro característico, no qual é possível identificar as contribuições dos diferentes mecanismos de retroespalhamento, conforme ilustrado na \autoref{fig:grafico_espectro}. Os deslocamentos de frequência observados nos espalhamentos Brillouin e Raman ocorrem em escalas distintas, sendo tipicamente o deslocamento associado ao Brillouin menor do que o do Raman.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.7\linewidth]{dist//figuras/grafico_espectro.png}
+      \caption{Gráfico de espectro típico de luz retroespalhada, categorizando os diferentes mecanismos de retroespalhamento e seus respectivos ganhos ou perdas de energia. O espectro também ilustra os efeitos de temperatura (T) e deformação ($\varepsilon$) sobre esses componentes. Reproduzido de \citet{ekechukwu2021well}.}
+      \label{fig:grafico_espectro}
+  \end{figure}
+
+  O DFOS consiste na análise do sinal detectado pelo interrogador de forma a correlacionar tanto o valor absoluto quanto suas variações com o ambiente onde a fibra está instalada, sendo capaz de monitorar todo o comprimento da fibra com um único sistema de aquisição. Diferentes tecnologias foram desenvolvidas com base no fenômeno físico de interesse e no tipo de retroespalhamento analisado. A seguir, são descritas as principais tecnologias aplicadas à indústria do petróleo.
+
+  \begin{enumerate}
+      \item Sensoriamento de temperatura distribuído (DTS em inglês): a razão entre a intensidade dos sinais Raman Stokes e anti-Stokes pode ser relacionada diretamente à temperatura ao longo da fibra (\autoref{fig:grafico_espectro}), mediante calibração com uma referência. Trata-se de uma das primeiras aplicações desenvolvidas, com amplo histórico de uso. Entretanto, como o retroespalhamento Raman é relativamente fraco, o alcance da técnica pode ser limitado, especialmente em aplicações \textit{offshore}.
+      \item Sensoriamento de deformação distribuído (DSS em inglês): os picos do espectro Brillouin variam em função da temperatura e da deformação da fibra (\autoref{fig:grafico_espectro}). Devido à sua baixa resolução temporal, o DSS é mais adequado à detecção de fenômenos de baixa frequência, como deformações associadas à evolução de fraturas. O método apresenta melhor desempenho em aplicações \textit{onshore}, em função do bom acoplamento entre a fibra instalada atrás do revestimento e a formação rochosa. Um desafio associado à técnica é a separação dos efeitos de temperatura e deformação nas medições.
+      \item Sensoriamento acústico distribuído (DAS em inglês): o sistema detecta a luz proveniente do retroespalhamento Rayleigh que retorna ao interrogador óptico. Esse sinal resulta da interferência dos campos elétricos das ondas reemitidas pelas heterogeneidades presentes no núcleo da fibra dentro de um comprimento de medição (\textit{gauge length}), conforme ilustrado na \autoref{fig:teoria_das}. Perturbações externas que alteram a distância entre esses centros espalhadores, como deformações dinâmicas associadas a vibrações e ondas acústicas, além de variações térmicas de baixa frequência, modificam a fase e, consequentemente, a intensidade da luz retroespalhada. Por meio de algoritmos de demodulação, é possível extrair a variação de fase, que apresenta relação aproximadamente linear com a deformação mecânica ao longo da fibra.
+  \end{enumerate}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.7\linewidth]{dist//figuras/representacao_DAS.png}
+      \caption{a) Esquema da modelagem do processo do DAS, mostrando os centros espalhadores dentro do comprimento de medição. b) Exemplo representativo do traço Rayleigh detectado pelo interrogador. Adaptado de \citet{ashry}}
+      \label{fig:teoria_das}
+  \end{figure}
+
+  As aplicações de DAS, foco deste trabalho, envolvem correlacionar a resposta da fibra óptica com fenômenos físicos de interesse. No próximo item, serão apresentados exemplos relacionados ao escoamento de fluidos com potencial aplicação em poços \textit{offshore}.
+  
+  \section{Aplicações de DAS em escoamento}
+
+  O termo sensoriamento acústico distribuído evidencia que o principal interesse dessa ferramenta está no registro de ondas acústicas (i.e., ondas de pressão) que atingem a fibra óptica. Assim, pode-se inferir que as aplicações apresentadas neste item tratam a fibra óptica como um conjunto de sensores análogos a microfones distribuídos ao longo do poço, sendo a intensidade do sinal frequentemente associada ao nível de perturbação do escoamento, especialmente em regimes turbulentos.
+  
+  \citet{introduction_hartog_2017} comenta que outros tipos de vibração, como ondas cisalhantes e de superfície, também podem ser relevantes, sugerindo o uso do termo mais geral sensoriamento de vibração distribuído (DVS em inglês). Contudo, é importante considerar a forma de instalação da fibra óptica ao se determinar quais tipos de vibração são efetivamente captados pelo DAS. \citet{seabrook_2022} comentam que a fibra óptica é fabricada dentro de um condutor, imersa em gel e com comprimento excedente, tornando-a pouco sensível a deformações mecânicas diretas. Dessa forma, as perturbações detectadas estão mais associadas a efeitos acústicos e térmicos do ambiente.
+  
+  Um dos primeiros exemplos de aplicação bem-sucedida refere-se ao monitoramento da operação de válvulas de \textit{gas lift} (VGL). Nesse método de elevação artificial, gás é injetado do anular para a coluna de produção com o objetivo de reduzir a densidade do fluido e aumentar a vazão de produção. Para garantir eficiência, busca-se que o escoamento dentro da coluna ocorra no regime de bolhas dispersas.
+  
+  No caso de regime em pistão (\textit{slug flow}), o fluxo de gás passa a prejudicar a produção, gerando excesso de turbulência e interferindo no escoamento do óleo. \citet{koelman_2011} utilizaram o DAS para monitorar o regime de escoamento e otimizar a vazão de \textit{gas lift}, conforme ilustrado na \autoref{fig:pistao_gas}. Nessa figura, é possível identificar a profundidade da VGL, estimar o tempo de trânsito das bolhas até a superfície, observar a expansão das bolhas ao longo do trajeto e identificar a formação de escoamento em regime pistão próximo a 100 segundos.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.7\linewidth]{dist//figuras/pistao_gas.png}
+      \caption{Resposta do DAS à operação do \textit{gas lift} em função do tempo (eixo x) e profundidade do poço (eixo y). As cores variam de azul (baixa turbulência) a vermelho (alta turbulência). Adaptado de \citet{koelman_2011}.}
+      \label{fig:pistao_gas}
+  \end{figure}
+  
+  \citet{haavik_2024} apresentou um caso que ilustra a alta sensibilidade do DAS. Em um poço produtor operando com \textit{gas lift}, foi detectado vazamento de óleo da coluna para o anular durante períodos de fechamento do poço, causado pelo atraso no fechamento da VGL. A \autoref{fig:vgl_vazando} mostra um espectrograma do sinal acústico extraído por DAS de baixa frequência, no qual se observa o ruído associado ao vazamento, seguido de um evento impulsivo correspondente ao fechamento da válvula e uma subsequente redução significativa do sinal.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.85\linewidth]{dist//figuras/VGL_fechando.png}
+      \caption{Espectrograma do áudio extraído através do DAS de baixa frequência, ilustrando o vazamento em uma VGL durante um período de fechamento de um poço produtor. Os tons de amarelo mostram o ruído provocado pelo vazamento, seguido de um pico associado ao fechamento da válvula. Extraído de \citet{haavik_2024}.}
+      \label{fig:vgl_vazando}
+  \end{figure}
+  
+  Outras aplicações qualitativas incluem a detecção da formação de parafina na coluna de produção \citep{panhuis_2014}, a estimativa do estado de abertura de válvulas de controle de fluxo (ICV) \citep{minggu_2021} e a identificação de produção de areia em sistemas com gravel pack \citep{sadigov_2017}.
+  
+  Fenômenos físicos distintos afetam a resposta da fibra óptica em diferentes faixas de frequência, de modo que o uso de filtros pode proporcionar ganhos significativos na interpretação dos resultados. \citet{panhuis_2014} reportam que baixas frequências são mais adequadas para a identificação de interfaces entre fluidos e regimes de escoamento, enquanto frequências intermediárias auxiliam na detecção de fluxo através de ICVs e frequências mais altas são sensíveis à operação de válvulas de gas lift. \citet{haavik_2023} demonstrou ainda que o DAS de baixa frequência pode ser utilizado para estimar variações de temperatura ao longo do tempo.
+  
+  Estudos que buscam analisar quantitativamente o escoamento em tubos ou através de restrições procuram correlacionar a vazão com as perturbações acústicas geradas pelo fluxo turbulento e detectadas pelo DAS. Esses trabalhos são discutidos em maior detalhe no item seguinte.
+
+  \section{Estimativa de vazão: estado da arte}
+
+  \citet{unalmis_2015}, \citet{unalmis_2022}.
+
+  \chapter{Metodologia}
+
+  \chapter{Resultados e discussão}
+
+  \chapter{Conclusões}
+
+  \backmatter
+
+  \bibliographystyle{coppe-plain}
+  \bibliography{dissertacao}
+
+\end{document}
+
+\newcommand{\annex}{
+    \iflanguage{brazilian}
+        {\renewcommand{\appendixname}{Anexo}}
+        {\renewcommand{\appendixname}{Annex}}
+    \appendix
+}
+%% 
+%%
+%% End of file `dissertacao.tex'.

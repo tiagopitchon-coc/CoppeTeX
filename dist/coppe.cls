@@ -757,7 +757,7 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
   \newcommand\listsymbolname{Lista de S{\' i}mbolos}
   \newcommand\glossaryname{Gloss{\' a}rio}
 \fi
-\newcommand\local@advisorstring{Orientador}
+\newcommand\local@advisorstring{Orientadora}
 \newcommand\foreign@advisorstring{Advisor}
 \ifthenelse{\boolean{maledoc}}{%
   \newcommand\local@approvedname{Examinado por}%
