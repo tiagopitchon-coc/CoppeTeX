@@ -34,6 +34,7 @@
 \usepackage[most]{tcolorbox} % caixas de texto
 \usepackage{amsmath,amssymb}
 \usepackage{hyperref}
+\usepackage{xurl} % para quebrar urls longos
 \usepackage{listings} % para usar listagens
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc} % Apenas se usar o compilador pdfLaTeX
@@ -113,7 +114,7 @@
   
   Dessa forma, os objetivos específicos são:
   \begin{itemize}
-      \item Obter e organizar os dados provenientes da base MSEEL, preparando-os para as etapas de análise;
+      \item Obter e organizar os dados provenientes da base do projeto MSEEL, preparando-os para as etapas de análise;
       \item Realizar análise exploratória dos dados, visando o alinhamento temporal e espacial das diferentes variáveis e a caracterização do sinal DAS;
       \item Definir e aplicar um filtro adequado ao sinal DAS, incluindo a análise do espectro de frequências por meio de espectrogramas para seleção da banda de interesse;
       \item Extrair e calcular o atributo de energia do sinal DAS como métrica representativa das perturbações associadas ao escoamento;
@@ -140,7 +141,7 @@
 
   \section{Fundamentos de DFOS e DAS}
 
-  Os conceitos apresentados neste item baseiam-se nas seguintes referências clássicas da área de sensoriamento distribuído por fibra óptica (DFOS em inglês): \citet{introduction_hartog_2017}, \citet{dts_shell} e \citet{dts_slb}, complementadas por trabalhos mais recentes, como \citet{ashry}, \citet{kavousi_2018}, \citet{he_2021}, \citet{soroush_2022} e; pelos curso de \citet{curso_dria} e \citet{curso_indiano}.
+  Os conceitos apresentados neste item baseiam-se nas seguintes referências clássicas da área de sensoriamento distribuído por fibra óptica (DFOS em inglês): \citet{introduction_hartog_2017}, \citet{dts_shell} e \citet{dts_slb}, complementadas por trabalhos mais recentes, como \citet{ashry}, \citet{ghahfarokhi_2018}, \citet{he_2021}, \citet{soroush_2022} e; pelos curso de \citet{curso_dria} e \citet{curso_indiano}.
 
   O reflectômetro óptico no domínio do tempo (OTDR em inglês) foi desenvolvido para identificar atenuações, falhas reflexivas e imperfeições em fibras ópticas voltadas à transmissão de dados. Ele consiste em um equipamento chamado interrogador, que emite uma série de pulsos de luz em uma das extremidades da fibra e monitora o sinal refletido de volta, conforme ilustrado na \autoref{fig:otdr}.
 
@@ -207,7 +208,7 @@
   \begin{figure}
       \centering
       \includegraphics[width=0.85\linewidth]{dist//figuras/VGL_fechando.png}
-      \caption{Espectrograma do áudio extraído através do DAS de baixa frequência, ilustrando o vazamento em uma VGL durante um período de fechamento de um poço produtor. Os tons de amarelo mostram o ruído provocado pelo vazamento, seguido de um pico associado ao fechamento da válvula. Extraído de \citet{haavik_2024}.}
+      \caption{Espectrograma do áudio extraído através do DAS de baixa frequência, ilustrando o vazamento em uma VGL durante um período de fechamento de um poço produtor. Os tons de amarelo mostram o ruído provocado pelo vazamento, seguido de um pico associado ao fechamento da válvula. Reproduzido de \citet{haavik_2024}.}
       \label{fig:vgl_vazando}
   \end{figure}
   
@@ -232,7 +233,7 @@
   \begin{figure}
       \centering
       \includegraphics[width=0.5\linewidth]{dist//figuras/grafico_DAS_Schaeffer_2024.png}
-      \caption{ Resposta do DAS a um escoamento monofásico através de uma ICV. O sinal do DAS é representado pela amplitude RMS em uma banda de frequência selecionada, calculada nos canais correspondentes à posição da válvula. O eixo vertical está em escala logarítmica e as cores indicam diferentes posições de abertura da ICV. Observa-se uma relação log-linear entre a amplitude do sinal e a vazão, com redução da amplitude para maiores aberturas da válvula. Extraído de \citet{schaeffer_2024}.}
+      \caption{ Resposta do DAS a um escoamento monofásico através de uma ICV. O sinal do DAS é representado pela amplitude RMS em uma banda de frequência selecionada, calculada nos canais correspondentes à posição da válvula. O eixo vertical está em escala logarítmica e as cores indicam diferentes posições de abertura da ICV. Observa-se uma relação log-linear entre a amplitude do sinal e a vazão, com redução da amplitude para maiores aberturas da válvula. Reproduzido de \citet{schaeffer_2024}.}
       \label{fig:schaeffer_2024}
   \end{figure}
 
@@ -241,7 +242,7 @@
   \begin{figure}
       \centering
       \includegraphics[width=0.5\linewidth]{dist//figuras/grafico_DAS_Moradi_2024.png}
-      \caption{Relação entre o nível de pressão sonora (SPL em inglês), na faixa de frequência de 2000 a 7500 Hz, e o logaritmo do cubo da vazão para escoamento bifásico óleo-água através de uma AICD. A escala de cores representa diferentes frações volumétricas de água no escoamento. Extraído de \citet{moradi_2024}.}
+      \caption{Relação entre o nível de pressão sonora (SPL em inglês), na faixa de frequência de 2000 a 7500 Hz, e o logaritmo do cubo da vazão para escoamento bifásico óleo-água através de uma AICD. A escala de cores representa diferentes frações volumétricas de água no escoamento. Reproduzido de \citet{moradi_2024}.}
       \label{fig:moradi_2024}
   \end{figure}
 
@@ -250,17 +251,696 @@
   \citet{li_2021} aplicaram técnicas de aprendizado de máquina para estimar a vazão de injeção durante os estágios de fraturamento do poço MIP-3H do projeto MSEEL. Para isso, avaliaram duas formas distintas de combinar os conjuntos de dados: DAS, DTS e microssísmica e; DAS e microssísmica. Foram avaliadas arquiteturas baseadas em redes convolucionais (ResNet18) e combinações destas com redes recorrentes (LSTM), apresentando bons valores de raiz do erro quadrático médio (RSME em inglês). Esses trabalhos serviram como motivação para o desenvolvimento desta dissertação, que utiliza o mesmo conjunto de dados, descrito no capítulo seguinte.
 
   \chapter{O poço MIP-3H do projeto MSEEL}
+
+  O projeto \textit{Marcellus Shale Energy and Environmental Laboratory} (MSEEL) tem por objetivo fornecer uma infraestrutura de produção real de recursos não convencionais de óleo e gás na qual podem ser realizados o desenvolvimento e a validação de novas tecnologias voltadas ao aumento do fator de recuperação e à redução do impacto ambiental \citep{mseel_site}.
   
+  Uma das áreas destinadas a essas pesquisas localiza-se no Morgantown Industrial Park, no estado da Virginia Ocidental (Estados Unidos), conforme apresentado no mapa da \autoref{fig:LocationMap}. O reservatório corresponde a um folhelho portador de gás natural da formação Marcellus, localizado na bacia Appalachian. Antes do início do projeto, a área já se encontrava em produção com os poços MIP-4H e MIP-6H. Para fins de pesquisa, foram perfurados os poços produtores MIP-3H e MIP-5H, além do poço de observação MIP-SW.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.7\linewidth]{dist//figuras/LocationMap.jpg}
+      \caption{Mapa da área de estudo do projeto MSEEL, indicando a localização e as trajetórias dos poços de produção e de observação. Reproduzido de \citet{mseel_site}.}
+      \label{fig:LocationMap}
+  \end{figure}
+
+  O poço produtor MIP-3H foi equipado com cabos de fibra óptica fixados externamente à coluna de revestimento e preparados para medição de temperatura (DTS) e sensoriamento acústico (DAS), conforme ilustrado na \autoref{fig:esquema_cabo_fo}.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.5\linewidth]{dist//figuras/esquema_cabo_FO.png}
+      \caption{Esquema da instalação do cabo de fibra óptica no poço MIP-3H. (A) Cabo fixado externamente à coluna de revestimento e envolvido por cimento, com folga de comprimento. (B) Vista em perfil da instalação ao longo do poço. Reproduzido de \citet{ghahfarokhi_2018}.}
+      \label{fig:esquema_cabo_fo}
+  \end{figure}
+
+  O canhoneio é o processo por meio do qual são abertos orifícios de uma polegada aproximadamente no revestimento do poço, denominados canhoneados, com o objetivo de estabelecer comunicação hidráulica entre a formação rochosa do reservatório e o interior do poço \citep{jin2026distributed}. A eficiência dessa comunicação pode ser ampliada por meio do fraturamento hidráulico, no qual um fluido é injetado sob alta pressão com o intuito de induzir a fratura da rocha reservatório. Para manter essas fraturas abertas e com alta permeabilidade, são injetados materiais particulados denominados propantes. O processo de fraturamento hidráulico é geralmente realizado em etapas, denominadas estágios, devido a limitações operacionais e à necessidade de controlar a estimulação ao longo do poço. Essa abordagem também permite a produção isolada de diferentes zonas do reservatório ou, como no caso do poço MIP-3H, a aplicação de diferentes técnicas ao longo do poço. Em cada estágio, são definidos intervalos específicos, chamados de \textit{clusters}, nos quais os canhoneados são realizados de forma a atender aos objetivos de estimulação e produção.
+  
+  Segundo \citet{bohn_2020}, cinco técnicas distintas de fraturamento hidráulico, combinadas com diferentes programas de tratamento, foram testadas ao longo de 28 estágios, conforme resumido na \autoref{tab:resumo_tratamento}. A \autoref{fig:trajetoria_mip3h} apresenta a trajetória do poço com a posição dos estágios de fraturamento.
+
+  \begin{table}[!ht]
+  \centering
+  \begin{tabular}{>{\centering\arraybackslash}p{1.5cm} c >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm}}
+  \hline
+  Técnica & Estágio & Núm. \textit{clusters} & Núm. canhoneados & Densidade (tiros/ft) & Compr. estágio (ft) & Prog. de tratamento \\
+  \hline
+   
+  E & 28 & 4 & 40 & 6 & 191 & A \\
+  E & 27 & 4 & 40 & 6 & 184 & A \\
+  E & 26 & 5 & 40 & 6 & 225 & A \\
+  E & 25 & 5 & 32 & 6 & 231 & A \\
+  E & 24 & 5 & 30 & 6 & 222 & A \\
+  E & 23 & 5 & 40 & 6 & 237 & C \\
+  E & 22 & 5 & 40 & 6 & 220 & C \\
+   
+  D & 21 & 5 & 40 & 5 & 218 & D \\
+  D & 20 & 5 & 40 & 5 & 240 & D \\
+    
+  C & 19 & 4 & 32 & 6 & 180 & C \\
+  C & 18 & 4 & 32 & 8 & 180 & C \\
+  C & 17 & 4 & 32 & 6 & 181 & C \\
+  C & 16 & 4 & 26 & 6 & 178 & C \\
+  C & 15 & 4 & 26 & 6 & 186 & C \\
+  C & 14 & 5 & 30 & 6 & 228 & A \\
+  C & 13 & 5 & 30 & 6 & 230 & A \\
+    
+  B & 12 & 5 & 50 & 5 & 231 & B \\
+  B & 11 & 5 & 50 & 5 & 232 & B \\
+  B & 10 & 5 & 50 & 5 & 227 & B \\
+  B & 9  & 5 & 50 & 5 & 237 & B \\
+  B & 8  & 5 & 50 & 5 & 222 & B \\
+  B & 7  & 5 & 50 & 5 & 224 & B \\
+    
+  A & 6 & 5 & 50 & 5 & 245 & A \\
+  A & 5 & 5 & 50 & 5 & 234 & A \\
+  A & 4 & 5 & 50 & 5 & 230 & A \\
+  A & 3 & 5 & 50 & 5 & 238 & A \\
+  A & 2 & 5 & 50 & 5 & 223 & A \\
+  A & 1 & 5 & 50 & 5 & 233 & A \\
+    
+  \hline
+  \end{tabular}
+  \caption{Resumo dos estágios de fraturamento hidráulico no poço MIP-3H, incluindo referências às técnicas e aos programas de tratamento utilizados. Adaptado de \citet{bohn_2020}.}
+  \label{tab:resumo_tratamento}
+  \end{table}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.6\linewidth]{dist//figuras/trajetoria_MIP-3H.png}
+      \caption{Trajetória do poço MIP-3H com a localização dos estágios de fraturamento ao longo da profundidade medida (Measured Depth – MD). Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:trajetoria_mip3h}
+  \end{figure}
+
+  Diversos trabalhos, como \citet{kavousi_2017}, \citet{ghahfarokhi_2018} e \citet{bohn_2020}, utilizaram medições de DAS, DTS, microssísmica, perfis geofísicos e amostras de rocha, em conjunto com parâmetros operacionais de fraturamento, para caracterizar as fraturas geradas e comparar as diferentes técnicas testadas. Esse conjunto abrangente de dados foi posteriormente disponibilizado para uso público por meio do servidor do projeto MSEEL \citep{mseel_site}.
+  
+  Para o desenvolvimento desta dissertação de mestrado, foram utilizados os seguintes conjuntos de dados:
+
+  \begin{enumerate}
+      \item Trajetórias do poço: arquivos em formato de planilha contendo o levantamento direcional do poço MIP-3H e de seu poço piloto, incluindo parâmetros como profundidade medida (\textit{measured depth} – MD), profundidade vertical verdadeira (\textit{true vertical depth} – TVD), inclinação, azimute e coordenadas geográficas.
+      \item Relatório de fraturamento: planilha contendo resumo dos 28 estágios de fraturamento, incluindo volumes totais de fluidos e de propante injetados, concentrações, topo e base de cada \textit{cluster}, densidade de tiros e número total de perfurações.
+      \item Dados operacionais de superfície: arquivos em formato CSV contendo medições realizadas durante os estágios de fraturamento hidráulico, incluindo pressão de injeção e sua derivada, vazão de fluido limpo e com propante (\textit{slurry}), concentração de propante ao longo do tempo (em superfície e no fundo do poço) e composição do fluido de tratamento. Esses dados apresentam taxa de amostragem temporal de 1 Hz.
+      \item Sinal DAS: registros adquiridos durante os fraturamentos hidráulicos, armazenados em arquivos no formato SEGY, contendo um atributo de fase associado ao retroespalhamento Rayleigh, obtido por meio de técnicas de detecção heteródina \citep{kavousi_2017}. Cada arquivo possui 493 canais distribuídos ao longo do poço, correspondendo a uma resolução espacial de 16,74 ft, com duração de 30 segundos e taxa de amostragem temporal de 2 kHz (intervalo de 500 microssegundos).
+  \end{enumerate}
+  
+  No capítulo seguinte, é apresentada a metodologia proposta para o processamento, análise e modelagem dos dados obtidos no poço MIP-3H. O foco está na utilização do sinal DAS, associado às perturbações induzidas pelo escoamento turbulento através dos canhoneados, para investigar a sua capacidade de estimar a vazão de injeção durante os estágios de fraturamento hidráulico.
+
   \chapter{Metodologia}
 
+  Este trabalho de mestrado tem como objetivo avaliar a aplicabilidade do sensoriamento acústico distribuído (DAS em inglês) na estimativa de vazão de um escoamento através de restrições, por meio do uso de modelos de aprendizado de máquina.
+  
+  Para isso, são utilizados os dados coletados durante os estágios de fraturamento hidráulico no poço MIP-3H do projeto MSEEL, descritos no Capítulo 3. O fluido injetado é composto por água e propante, com concentração variável ao longo do tempo, e o sinal analisado está associado às perturbações induzidas pela turbulência do escoamento através dos canhoneados.
+  
+  A metodologia adotada é estruturada nas seguintes etapas: obtenção e preparação dos dados; análise exploratória dos dados; extração do atributo de energia; processamento do sinal DAS e definição do filtro; análise da relação entre o sinal DAS e parâmetros operacionais (problema direto); e modelagem para estimativa de vazão utilizando técnicas de aprendizado de máquina (problema inverso).
+  
+  A análise foi realizada utilizando a linguagem de programação Python \citep{python312} e de suas bibliotecas Pandas \citep{pandas}, Numpy \citep{numpy}, SEGYIO \citep{segyio19}, SciPy \citep{scipy}, Scikit-learn \citep{scikit}, pyGAM \citep{pygam}, Matplotlib \citep{matplotlib} e Seaborn \citep{seaborn}. As referências apresentam as versões instaladas de cada biblioteca, devendo ser consideradas as dependências relacionadas.
+
+  \section{Obtenção e preparação dos dados}
+
+  Os dados foram baixados do servidor do projeto MSEEL \citep{mseel_site}, descompactados e manipulados da seguinte forma:
+
+  \begin{itemize}
+      \item Arquivos em planilha (trajetória e relatório de fraturamento): lidos e convertidos para estruturas do tipo \textit{DataFrame} do Pandas.
+      \item Arquivos de texto CSV com dados operacionais de fraturamento hidráulico: lidos e convertidos para estruturas do tipo \textit{DataFrame} do Pandas.
+      \item Arquivos com o sinal do DAS: lidos utilizando a biblioteca SEGYIO. Como não foram identificados marcadores explícitos de tempo (\textit{timestamps}) nos arquivos, utilizou-se a data presente no cabeçalho como referência inicial, sendo os instantes subsequentes reconstruídos com base na frequência de amostragem de 2 kHz, conforme informada na literatura. Com o objetivo de facilitar o processamento paralelo, cada combinação canal–estágio foi armazenada em um vetor NumPy, acompanhado de um vetor independente de marcadores de tempo.
+  \end{itemize}
+
+  \section{Análise exploratória dos dados}
+
+  Para a análise exploratória, alguns gráficos foram construídos com o Matplotlib. A seguir, apresentam-se os principais e o que se espera analisar:
+
+  \begin{itemize}
+      \item Variância do sinal DAS pela profundidade dos canais e estágios. Foram calculadas as variâncias em intervalo de 5 minutos de vazão estável para cada estágio de fraturamento. Objetivos: verificar o aumento da variância associado à turbulência nos canhoneados e alinhar os canais com as profundidades dos estágios.
+      \item Profundidade dos canais e dos intervalos canhoneados de cada estágio pela variância do sinal DAS. Objetivos: identificar picos associados aos canhoneados e determinar limites superiores e inferiores dos estágios.
+      \item Gráficos combinados de vazão de injeção e concentração de propante pelo tempo e de variância do sinal DAS em intervalos de 30 segundos pelo tempo (X) e pela profundidade (Y), com a posição dos estágios. Objetivos: alinhar temporalmente os dados de vazão e concentração de propante com o sinal DAS; identificar inconsistências nos dados e; observar comportamentos relevantes.
+  \end{itemize}
+
+  \section{Extração do atributo de energia (AE)}
+
+  Parte da vibração observada pela fibra óptica pode ser associada a energia do fluido dissipada pela turbulência durante o escoamento pelos canhoneados. Assim, considerou-se representar o sinal DAS na forma de atributo de energia (AE), proposto por \citet{kavousi_2017} e definida pela \autoref{eq:atributo_energia}:
+  
+  \begin{equation}
+    AE_i = \sum_{j=n_1}^{n_2} x(j)^2
+  \label{eq:atributo_energia}
+  \end{equation}
+  onde: \(i\) é o canal variando de 1 a 493; \(n_1\) e \(n_2\) são os índices do vetor do canal e; \(x(j)\) é o valor do sinal DAS na posição (\(j\)). \(n_2 - n_1\) é definido pela divisão entre a janela de tempo analisada pela frequência de aquisição do dado.
+
+  Uma outra forma de representar o sinal DAS por canal é através da energia por banda de frequência (FBE em inglês), proposta por \citet{sharma_2021}, onde uma transformada rápida de Fourier é aplicada em uma janela de tempo e integra-se o resultado em um intervalo de frequências. Como toda a operação permanece no domínio da frequência, optou-se por não usar este atributo neste trabalho.
+
+  \section{Processamento do sinal DAS e definição do filtro}
+
+  O sinal DAS é composto por diferentes contribuições, incluindo efeitos de turbulência do escoamento, deformações mecânicas e variações térmicas. Para isolar os efeitos associados ao escoamento, foi necessário aplicar técnicas de processamento de sinal.
+  
+  Esses fenômenos devem ser separados para que o sinal DAS possa representar, de forma mais fidedigna, a vibração oriunda da turbulência do fluxo e ser capaz de estimar a vazão de injeção. \citet{panhuis_2014} mencionam a importância da seleção correta das bandas de frequência, sugerindo as de média e alta frequência para a análise de escoamentos através de ICVs e VGLs.
+  
+  Tendo em vista que as principais referências bibliográficas propõem uso de filtros com banda de frequência alta demais para esse conjunto de dados, ficando acima do Nyquist do sinal adquirido, foi necessário realizar um estudo independente analisando bandas menores.
+  
+  Inicialmente, foram construídos espectrogramas com o objetivo de identificar os picos de frequência presentes no sinal. Para cada estágio, são gerados quatro espectrogramas a partir da combinação de dois intervalos de profundidade - um na região dos canhoneados e outro em uma zona acima - e dois intervalos de tempo - em condição sem fluxo e com fluxo constante. Essa abordagem permitiu distinguir o ruído de fundo, os componentes associados à turbulência do escoamento na coluna e outras possíveis fontes de ruído.
+  
+  Considerando a elevada energia envolvida no processo de fraturamento do reservatório, espera-se que os picos de energia nos espectrogramas estejam concentrados em baixas frequências. Os espectrogramas foram calculados por meio da transformada de Fourier de curto tempo (STFT), utilizando a biblioteca do SciPy, com janelas de 1 e 4 segundos, dependendo da banda de frequência analisada. Como a transformada é aplicada individualmente a cada canal, os resultados são posteriormente agregados por meio da mediana ao longo dos canais, de modo a obter uma medida robusta e representativa da perturbação na profundidade de interesse.
+  
+  Dando continuidade a análise espectral, foi realizada uma investigação para identificar a banda de frequência mais adequada para realçar os componentes de interesse e reduzir a influência de ruídos indesejados. Para isso, aplicou-se um filtro passa-banda do tipo Butterworth, considerando uma frequência de amostragem de 2 kHz e diferentes opções de bandas, utilizando a função butter do SciPy para a definição do filtro em seções de segunda ordem (SOS), o que garante maior estabilidade numérica. A filtragem foi conduzida de forma bidirecional (fase zero) por meio da função sosfiltfilt (SciPy), evitando distorções de fase que poderiam comprometer a interpretação temporal dos eventos. Adicionalmente, considerando a presença de lacunas nos dados, os sinais foram segmentados automaticamente em trechos contínuos a partir da análise dos intervalos de amostragem, sendo o filtro aplicado individualmente em cada segmento válido.
+  
+  Para cada banda de frequência avaliada, foi então calculado um atributo de energia em janelas temporais de 1 segundo e acumulado nos canais correspondentes à profundidade dos canhoneados. Essa escolha de janela temporal tem por objetivo deixar o DAS na mesma frequência dos dados operacionais de fraturamento. Essas curvas foram comparadas com as curvas reportadas de vazão de injeção do fluido de fraturamento, adotando-se como critério de seleção a banda de frequência cuja resposta temporal apresentou maior aderência qualitativa ao comportamento das vazões.
+
+  \section{Análise estatística do problema direto}
+
+  \subsection{Estatísticas descritivas bivariadas}
+
+  Na análise de estatísticas descritivas bivariadas, buscou-se entender a relação entre o DAS e os seguintes parâmetros operacionais do fraturamento hidráulico: vazões de injeção de fluido limpo e com propante na superfície; concentração de propante na superfície e no fundo do poço e; pressão de injeção na superfície. Tendo em vista que a área aberta ao fluxo impacta significativamente na intensidade da turbulência do escoamento, o número de canhoneados do estágio também foi considerado.
+  
+  Foram adotadas as seguintes hipóteses simplificadoras:
+  
+  \begin{enumerate}
+      \item O diâmetro é o mesmo para todos os canhoneados e não varia com o tempo, apesar da erosão ao injetar fluido com propante.
+      \item A distribuição dos canhoneados dentro do intervalo do estágio pouco afeta a resposta final, tendo em vista que os atributos de energia são somados pelos canais na profundidade dos estágios.
+      \item O fluido de fraturamento, composto por água e propante, é incompressível.
+      \item A concentração do propante é suficiente para caracterizar a influência deste componente, podendo-se desprezar outras características como a composição.
+  \end{enumerate}
+  
+  Um \textit{DataFrame} do Pandas foi criado para agrupar os dados utilizados, contendo as seguintes colunas: número do estágio, marcador de tempo (\textit{timestep}), atributo de energia do DAS, vazão de injeção de fluido limpo na superfície (CFLD RATE), vazão de injeção de fluido com propante na superfície (SLUR RATE), concentração de propante na superfície (PROP CON), concentração de propante no fundo de poço (BH PROP CON), pressão de injeção na superfície (TR PRESS) e número de canhoneados. O atributo de energia foi extraído em janelas de 1 segundo e acumulado nos canais relativos às profundidades dos estágios. Além disso, ele passou por um processo de suavização através de média móvel e foi interpolado para sincronizar com os dados operacionais. Em alguns momentos, foi reportado haver pressão de injeção mesmo com vazão nula. Acredita-se que isso pode ter ocorrido por testes no sistema. Nestes casos, a pressão foi zerada.
+  
+  Para cada estágio de fraturamento, entre o atributo de energia do DAS e as variáveis operacionais selecionadas, foram calculadas correlações de Pearson e de Spearman usando a função do Pandas e a informação mútua com o Scikit-learn. Os resultados foram exibidos em gráficos do tipo boxplot gerados com o Seaborn.
+  
+  A correlação de Spearman se diferencia da de Pearson por ir além da captura de relações lineares, avaliando associações monotônicas com base nos ranks dos dados, o que a torna mais robusta a outliers e capaz de identificar relações não lineares desde que mantenham uma ordem consistente; já a correlação de Pearson mede apenas a intensidade de relações lineares e é mais sensível a valores extremos \citep{spearman}. Por sua vez, a informação mútua é interessante porque não assume nenhum tipo específico de relação (linear ou monotônica), sendo capaz de capturar dependências arbitrárias entre variáveis, inclusive relações altamente não lineares ou complexas, oferecendo assim uma medida mais geral da informação compartilhada entre elas \citep{mutual_information}.
+  
+  Gráficos extras foram criados com Matplotlib para complementar a análise e permitir a identificação de parâmetros operacionais que definem a resposta do DAS:
+
+  \begin{itemize}
+      \item Gráfico de dispersão da concentração de propante no fundo do poço pelo atributo de energia.
+      \item Gráfico de vazão de injeção de fluido limpo na superfície pelo atributo de energia separado em três subgráficos em função do número de canhoneados. Essa separação tem por objetivo dar destaque ao efeito de área aberta ao fluxo na resposta da fibra óptica.
+      \item Gráfico de pressão de injeção na superfície pelo atributo de energia separado em três subgráficos em função do número de canhoneados.
+  \end{itemize}
+  
+  Os parâmetros operacionais vazão de injeção de fluido limpo na superfície, concentração de propante no fundo do poço e pressão de injeção na superfície, além do número de canhoneados, foram escolhidos para as etapas seguintes.
+
+  \subsection{Modelagem estatística via GAM}
+
+  Segundo \citet{curso_gam} e o tutorial do pyGAM, modelos lineares são ótimos para interpretar os efeitos dos preditores na variável de resposta, mas não conseguem modelar efeitos não lineares, o que é o caso da vibração acústica sentida pela fibra óptica. Por outro lado, modelos caixa-preta de aprendizado de máquina são mais versáteis na modelagem, mas oferecem pouca ou nenhuma capacidade de interpretação.
+  
+  Por isso, sugerem o uso de modelos aditivos generalizados (GAM em inglês) como algo no meio do caminho entre as duas propostas anteriores. Ao permitir uso de funções não lineares, este tipo de modelo permite capturar relações que não são possíveis em modelos puramente lineares e, ao ser composto por adições, é possível examinar o efeito individual de preditores ao se manter os demais constantes.
+  
+  Desta forma, foi construído um GAM no qual o atributo de energia do DAS representa a resposta vibro-acústica do sistema fratura-poço em um regime pseudo-permanente com as seguintes premissas:
+
+  \begin{enumerate}
+      \item Sistema controlado principalmente pela vazão de injeção de fluido limpo na superfície.
+      \item O número de canhoneados modula a resposta hidráulica.
+      \item A concentração de propante atua condicionalmente e representa estados pseudo-permanentes discretos. A concentração de propante varia em degraus em cada etapa do processo, iniciando e terminando com zero.
+      \item A pressão de injeção na superfície atua como uma variável de estado. Isso é compreensível tendo em vista que os parâmetros de controle, definidos nos programas de fraturamento do MIP-3H, são os volumes e vazões injetados e tipos de fluido, composição e características do propante, em cada etapa do processo.
+  \end{enumerate}
+  
+  O modelo foi construído utilizando a biblioteca pyGAM, assumindo distribuição normal e função de ligação identidade. A \autoref{eq:modelo_gam} apresenta a função matemática que representa o modelo.
+  
+  \begin{equation}
+  \begin{split}
+    AE_{DAS}(t) = \alpha + s_1(\text{Vazão}) + te(\text{Vazão}(t), \text{Número Canhoneados}) \\ 
+    + f(\text{Concentração}(t)) + s_2(\text{Pressão}(t))
+  \label{eq:modelo_gam}
+  \end{split}
+  \end{equation}
+  onde: \(AE_{DAS}\) é o atributo de energia do DAS, \(\alpha\) é o termo constante que representa o nível basal médio do sinal; \(s\) é o termo que modela o efeito de uma variável contínua por meio de uma função suave (\textit{spline}); \(te\) é o termo que modela as interações entre duas ou mais variáveis contínuas por meio de funções suaves multidimensionais (tensores) e; \(f\) é termo utilizado para representar variáveis categóricas, estimando efeitos distintos para cada nível (categoria) do fator.
+
+  A ideia, deste modelo, é que o atributo de energia responda principalmente a uma vazão média influenciada pela combinação de vazão com número de canhoneados. Espera-se que a concentração de propante seja importante para explicar a variância dos dados, mas que a pressão de injeção tenha pouco efeito.
+  
+  O modelo foi testado incialmente com algumas simplificações, onde alguns termos eram retirados, e para diferentes valores de penalização global (\(\lambda\)) para o ajuste. Os resultados foram comparados com gráficos de graus de liberdade efetivo; de pseudo-R² e; de critério de informação Akaike, todos pela penalização.
+  
+  Em seguida, o modelo completo foi analisado através de gráficos de Resíduos pelos valores ajustados, pela vazão de injeção, pelo número de canhoneados, pela concentração de propante no fundo do poço e pela pressão de injeção e de um gráfico quantil-quantil (Q-Q plot) para avaliar a normalidade dos resíduos.
+  
+  Por fim, apresenta-se o sumário de ajuste do modelo completo com penalização global de 1, onde são feitas as considerações finais acerca da influência de cada parâmetro operacional.
+
+  \section{Modelagem do problema inverso com aprendizado de máquina}
+
+  Com base nas análises de correlação, de informação mútua, na visualização exploratória e na modelagem aditiva generalizada, o atributo de energia extraído do DAS mostrou apresentar uma dependência funcional em relação à vazão de injeção do fluido limpo na superfície, com modulação sistemática pelo número de canhoneados, pela concentração de propante no fundo do poço e pela pressão de injeção na superfície. Esses resultados são consistentes com a física esperada da vibração induzida por escoamento em restrições, cenário esperado para poços poços revestidos e fraturados hidraulicamente.
+  
+  Tendo sido estabelecida essa relação direta, a etapa seguinte aborda o problema inverso, buscando estimar a vazão de injeção a partir do atributo de energia acústica utilizando técnicas de aprendizado de máquina. Para isso, foram testados 4 regressores da biblioteca Scikit-learn: um linear baseado em mínimos quadrados (Ridge), três baseados em árvores de decisão (RandomForestRegressor, ExtraTreesRegressor e HistGradientBoostingRegressor).
+  
+  Os estágios de fraturamento foram separados em conjuntos de treino, validação e teste para uma avaliação dos modelos baseada na validação cruzada (k-fold) da seguinte forma:
+
+  \begin{itemize}
+      \item Três estágios foram desconsiderados: a fibra óptica apresentou problemas na profundidade do estágio 1; os dados de DAS do estágio 11 não foram preservados e; durante as análises anteriores, foi identificado um desvio significativo no comportamento do estágio 17 que carece de uma investigação mais aprofundada.
+      \item Os estágios 5, 12, 16, 21 e 28 foram escolhidos para compor o grupo de teste. Essa seleção buscou representar a diversidade do número de canhoneados.
+      \item Os 20 estágios remanescentes foram separados em 4 grupos de 5 estágios cada de forma aleatória, mas tentando manter a representatividade no número de canhoneados. A cada iteração do k-fold, 3 grupos eram usados para treino e 1 para validação.
+      
+  \end{itemize}
+  
+  A seleção do melhor modelo foi feita através de gráficos de boxplot com o Matplotlib das métricas raiz do erro quadrático médio (RMSE em inglês) e erro absoluto médio (MAE em inglês).
+  
+  O melhor modelo foi retreinado com os conjuntos de dados de treino e de validação e avaliado usando as métricas RMSE e MAE no conjunto de dados de teste. Gráficos comparando as vazões de injeção de fluido limpo na superfície foram criados com o Matplotlib para os estágios de fraturamento do conjunto de teste.
+  
   \chapter{Resultados e discussão}
 
+  \section{Análise exploratória dos dados}
+  \label{item:aed}
+
+  A variância foi o atributo escolhido para a análise exploratória dos dados por ser amplamente utilizada na análise de sinais e por possuir interpretação direta associada à intensidade das vibrações. Durante o escoamento, espera-se que a passagem do fluido pela coluna e, principalmente, por restrições como os canhoneados, gere perturbações mecânicas que se refletem no aumento da variância do sinal em relação ao ruído de fundo.
+  
+  A \autoref{fig:var_das_canais_estagios} apresenta um mapa de calor da variância do sinal DAS ao longo dos canais e estágios de fraturamento, com exceção do estágio 11. A variância foi calculada em uma janela de 5 minutos de vazão constante e as cores estão em escala logarítmica. Ao eixo Y dos canais, foi adicionado um eixo secundário com a profundidade medida (MD em inglês) e a posição dos estágios de fraturamento conforme informado nos relatórios. A partir da análise deste gráfico, é possível observar que:
+
+  \begin{itemize}
+      \item A variância do ruído de fundo, observável abaixo da profundidade de cada estágio, é aproximadamente duas ordens de grandeza menor que a variância associada ao escoamento na coluna acima dos canhoneados. Por sua vez, esta também é cerca de duas ordens de grandeza menor que a variância observada na região dos canhoneados. Isso permite identificar claramente os canais sob influência direta da restrição.
+      \item Há um padrão diagonal que reflete a progressão espacial dos estágios ao longo do poço. Observando os intervalos de maior variância, foi possível alinhar visualmente os canais e os estágios de fraturamento em profundidade.
+      \item O fato do tamanho do intervalo de maior variância ser aproximadamente o mesmo das espessuras registradas de cada estágio sugere que os efeitos acústicos associados à turbulência possuem alcance espacial limitado na configuração analisada. Isso fica bem evidente no estágio 17, que é o mais estreito de todos, sendo observado na resposta do DAS.
+      \item Existe um problema na fibra nos primeiros canais, resultando em valores elevados de variância mesmo na ausência de escoamento.
+  \end{itemize}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.6\linewidth]{dist//figuras/Var_DAS_Canais.png}
+      \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) em função do canal e da profundidade medida (MD em inglês) e dos estágios de fraturamento. A variância foi calculada em janelas de 5 minutos com vazão estável. Observa-se um padrão diagonal associado à progressão espacial dos estágios ao longo do poço. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:var_das_canais_estagios}
+  \end{figure}
+
+  Os estágios não foram canhoneados de forma uniforme ao longo de todo intervalo reportado, mas concentrados em quatro ou cinco intervalos menores chamados de \textit{clusters}. Uma questão relevante consistia em avaliar se a resolução espacial do DAS seria suficiente para identificar individualmente os \textit{clusters}. Portanto, foram criados gráficos, da variância calculada anteriormente pela profundidade e canais. Desta vez, ao invés de mostrar topo e base de cada estágio, foram mostrados os topos e bases de cada \textit{cluster}.
+  
+  As \autoref{fig:identificacao_canais_18} e \autoref{fig:identificacao_canais_16} mostram esses gráficos para os estágios 18 e 16, respectivamente. A primeira representa um caso representativo com boa definição dos picos onde um ou dois canais parecem reagir a cada \textit{cluster} com vales bem definido entre eles. Já a segunda figura ilustra um outro onde a identificação dos \textit{clusters} não é clara, havendo desde sobreposição de efeitos até a ausência do pico de um \textit{cluster}, que pode não ter sido fraturado de forma eficiente. Estes gráficos foram aproveitados para a definição dos canais que fazem parte do estágio e devem ser considerados na etapa seguinte de extração do atributo de energia.
+  
+  Os demais gráficos estão presentes no \autoref{anexo:canais}. Neles, é possível perceber que não há um alinhamento perfeito entre os picos e os \textit{clusters}, principalmente quando comparados estágios diferentes. Acredita-se que essa discrepância esteja relacionada à forma de instalação da fibra, que pode apresentar folgas variáveis entre os pontos de fixação.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/identificacao_canais/estagio18.png}
+      \caption{Variância do sinal DAS em função da profundidade para o estágio 18, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:identificacao_canais_18}
+  \end{figure}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/identificacao_canais/estagio16.png}
+      \caption{Variância do sinal DAS em função da profundidade para o estágio 16. Diferentemente da \autoref{fig:identificacao_canais_18}, observa-se menor definição dos picos associados aos \textit{clusters}, com sobreposição de efeitos e ausência de resposta clara em alguns intervalos. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:identificacao_canais_16}
+  \end{figure}
+
+  Uma última sequência de gráficos foi elaborada para concluir esta etapa. Nela, um mapa de calor da variância calculada em janelas de 30 segundos foi empilhado verticalmente em gráficos de vazão e pressão de injeção na superfície e de concentrações de propante na superfície e no fundo do poço pelo tempo. O mapa de calor foi alinhado lateralmente com um eixo de profundidade medida (MD) indicando as profundidades dos estágios de fraturamento.
+  
+  A Figura 4 apresenta o gráfico para o estágio 7, considerada representativa do conjunto, e os gráficos dos demais estágios estão no \autoref{anexo:das_operacionais}. A análise deste gráfico permite destacar que:
+
+  \begin{itemize}
+      \item A variância muda rapidamente com a vazão, apresentando mudanças bem verticalizadas nos canais. Isso sugere que a resposta do sistema ocorre de forma quase instantânea à variação de vazão, consistente com o comportamento esperado de um fluido de baixa compressibilidade.
+      \item Os últimos canais estão com ruído, como observado na Figura 1, e o canal 493 (último) está inoperante, apresentando valores zerados.
+      \item Existe uma faixa diagonal azul esverdeada que começa nos primeiros canais junto com o início da injeção, sendo possivelmente associado a efeitos térmicos decorrentes da injeção de fluido a temperatura distinta.
+  \end{itemize}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S07F.png}
+      \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 7 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:mapa_calor_Var_vazao}
+  \end{figure}
+
+  A análise exploratória fornece evidências de que o sinal DAS, representado pela variância, responde de forma consistente à injeção de fluido, com maior intensidade nas regiões associadas aos estágios e aos \textit{clusters}. Na próxima seção, é apresentada a análise espectral do sinal, com o objetivo de definir o filtro mais adequado para isolar as componentes associadas ao escoamento.
+
+  \section{Análise espectral e definição do filtro}
+
+  \section{Análise do problema direto}
+
+  \section{Modelagem do problema inverso}
+  
   \chapter{Conclusões}
 
   \backmatter
 
   \bibliographystyle{coppe-plain}
   \bibliography{dissertacao}
+
+  \appendix
+
+  \chapter{Perfis de variância do sinal DAS nos estágios de fraturamento}
+  \label{anexo:canais}
+
+  Este apêndice apresenta os perfis de variância do sinal DAS em função da profundidade para todos os estágios de fraturamento analisados, calculados em janelas de 5 minutos com vazão estável. Esses gráficos complementam a discussão apresentada na \autoref{item:aed}, em particular os exemplos mostrados nas \autoref{fig:identificacao_canais_18} e \autoref{fig:identificacao_canais_16}, e foram utilizados para auxiliar na identificação dos \textit{clusters} e na definição dos canais representativos de cada estágio.
+
+  %   \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio02.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 2, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_02}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio03.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 3, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_03}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio04.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 4, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_04}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio05.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 5, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_05}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio06.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 6, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_06}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio07.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 7, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_07}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio08.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 8, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_08}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio09.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 9, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_09}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio10.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 10, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_10}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio12.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 12, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_12}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio13.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 13, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_13}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio14.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 14, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_14}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio15.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 15, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_15}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio16.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 16, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_16}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio17.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 17, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_17}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio18.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 18, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_18}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio19.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 19, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_19}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio20.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 20, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_20}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio21.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 21, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_21}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio22.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 22, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_22}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio23.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 23, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_23}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio24.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 24, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_24}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio25.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 25, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_25}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio26.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 26, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_26}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio27.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 27, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_27}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/identificacao_canais/estagio28.png}
+  %     \caption{Variância do sinal DAS em função da profundidade para o estágio 28, calculada em janelas de 5 minutos com vazão estável. Os picos indicam regiões de maior influência dos \textit{clusters}, sendo possível observar vales entre eles. As setas indicam a correspondência entre picos e \textit{clusters}, enquanto as linhas verticais delimitam o intervalo do estágio. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_identificacao_canais_28}
+  % \end{figure}
+
+  \chapter{Mapas de calor da variância do sinal DAS e parâmetros operacionais dos estágios de fraturamento}
+  \label{anexo:das_operacionais}
+
+  Este apêndice apresenta os mapas de calor da variância do sinal DAS calculada em janelas de 30 segundos para todos os estágios de fraturamento analisados. Os gráficos são apresentados em conjunto com as séries temporais de vazão de injeção, pressão na superfície e concentração de propante, permitindo a avaliação integrada do comportamento do sinal DAS e das condições operacionais. Esses resultados complementam a análise apresentada na \autoref{item:aed}, cujo exemplo é mostrado na Figura \autoref{fig:mapa_calor_Var_vazao}.
+
+  %   \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S01F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 1 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_01}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S02F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 2 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_02}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S03F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 3 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_03}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S04F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 4 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_04}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S05F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 5 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_05}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S06F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 6 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_06}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S07F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 7 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_07}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S08F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 8 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_08}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S09F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 9 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_09}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S10F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 10 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_10}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S12F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 12 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_12}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S13F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 13 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_13}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S14F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 14 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_14}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S15F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 15 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_15}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S16F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 16 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_16}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S17F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 17 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_17}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S18F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 18 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_18}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S19F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 19 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_19}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S20F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 20 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_20}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S21F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 21 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_21}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S22F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 22 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_22}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S23F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 23 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_23}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S24F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 24 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_24}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S25F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 25 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_25}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S26F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 26 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_26}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S27F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 27 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_27}
+  % \end{figure}
+    
+  % \begin{figure}
+  %     \centering
+  %     \includegraphics[width=0.5\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S28F.png}
+  %     \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 28 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+  %     \label{fig:ap_mapa_calor_Var_vazao_28}
+  % \end{figure}
 
 \end{document}
 
