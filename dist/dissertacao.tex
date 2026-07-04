@@ -63,7 +63,7 @@
   \maketitle
 
   \frontmatter
-  \dedication{A alguém cujo valor é digno desta dedicatória.}
+  \dedication{A Jesus Cristo, que caminhou comigo nesta jornada e me carregou nos momentos mais difíceis.}
 
   \chapter*{Agradecimentos}
 
@@ -226,7 +226,7 @@
 
   Entretanto, a aplicação direta dessas abordagens em casos reais é limitada pela complexidade do processo de perfuração e de completação de poços. A instalação helicoidal da fibra não é prática e tem sido preterida em relação à instalação convencional, paralela à coluna. Mesmo em trabalhos mais recentes \citep{unalmis_2022}, a utilização de sensores pontuais adicionais se mostra necessária para permitir a caracterização completa do escoamento ao longo do poço.
 
-  Nesse contexto, esforços têm sido direcionados ao estudo da resposta acústica gerada por um escoamento turbulento ao atravessar restrições. \citet{zhu_2015} reproduziram condições análogas ao fraturamento hidráulico em laboratório, utilizando um hidrofone para avaliar o sinal acústico associado ao fluxo através de canhoneados. Os resultados indicaram: (i) relação aproximadamente linear entre o logaritmo do cubo da vazão e o nível de pressão sonora (SPL em inglês); (ii) variações de vazão influenciam a amplitude dos picos de frequência, mas não alteram a posição desses picos; (iii) a geometria da fratura afeta tanto a intensidade quanto a distribuição espectral do sinal; (iv) o comprimento e o diâmetro do canhoneado também influenciam o conteúdo em frequência; e (v) a possibilidade de estimar o rateio de vazão entre fraturas, posteriormente confirmada por \citet{zhu_2020}.
+  Nesse contexto, esforços têm sido direcionados ao estudo da resposta acústica gerada por um escoamento turbulento ao atravessar restrições. \citet{zhu_2015} reproduziram condições análogas ao fraturamento hidráulico em laboratório, utilizando um hidrofone para avaliar o sinal acústico associado ao fluxo através de canhoneados. Os resultados indicaram: (i) relação aproximadamente linear entre o logaritmo do cubo da vazão e o nível de pressão sonora (SPL em inglês); (ii) variações de vazão influenciam a amplitude dos picos de frequência, mas não alteram a posição desses picos; (iii) a geometria da fratura afeta tanto a intensidade quanto a distribuição espectral do sinal; (iv) o comprimento e o diâmetro do canhoneado também influenciam o conteúdo em frequência; e (v) a possibilidade de estimar o rateio de vazão entre fraturas, posteriormente confirmada por \citet{pakhotina_2020}.
 
   \citet{schaeffer_2024} realizaram experimentos laboratoriais avaliando a resposta acústica do fluxo através de válvula controle de fluxo (ICV em inglês) e de dispositivo autônomo de controle de fluxo (AICD em inglês). O sinal DAS foi filtrado na banda de interesse e a amplitude RMS foi calculada nos canais correspondentes à posição da válvula. Considerando os resultados para ICVs, em escoamentos monofásicos, observou-se uma relação log-linear entre a amplitude RMS e a vazão, divergindo da relação porposta por \citet{zhu_2015}. Verificou-se ainda que maiores aberturas da válvula estão associadas a menores amplitudes do sinal, conforme apresentado na \autoref{fig:schaeffer_2024}, o que é consistente com a redução da turbulência associada ao aumento da área de escoamento. Entretanto, resultados consistentes não foram obtidos para escoamentos multifásicos. Para esse experimento, foi necessária a instalação helicoidal da fibra óptica, restrita à região da válvula.
 
@@ -348,7 +348,7 @@
   
   Para isso, são utilizados os dados coletados durante os estágios de fraturamento hidráulico no poço MIP-3H do projeto MSEEL, descritos no Capítulo 3. O fluido injetado é composto por água e propante, com concentração variável ao longo do tempo, e o sinal analisado está associado às perturbações induzidas pela turbulência do escoamento através dos canhoneados.
   
-  A metodologia adotada é estruturada nas seguintes etapas: obtenção e preparação dos dados; análise exploratória dos dados; extração do atributo de energia; processamento do sinal DAS e definição do filtro; análise da relação entre o sinal DAS e parâmetros operacionais (problema direto); e modelagem para estimativa de vazão utilizando técnicas de aprendizado de máquina (problema inverso).
+  A metodologia adotada é estruturada nas seguintes etapas: obtenção e preparação dos dados; análise exploratória dos dados; extração do atributo de energia; processamento do sinal DAS e seleção do filtro; análise da relação entre o sinal DAS e parâmetros operacionais (problema direto); e modelagem para estimativa de vazão utilizando técnicas de aprendizado de máquina (problema inverso).
   
   A análise foi realizada utilizando a linguagem de programação Python \citep{python312} e de suas bibliotecas Pandas \citep{pandas}, Numpy \citep{numpy}, SEGYIO \citep{segyio19}, SciPy \citep{scipy}, Scikit-learn \citep{scikit}, pyGAM \citep{pygam}, Matplotlib \citep{matplotlib} e Seaborn \citep{seaborn}. As referências apresentam as versões instaladas de cada biblioteca, devendo ser consideradas as dependências relacionadas.
 
@@ -384,19 +384,19 @@
 
   Uma outra forma de representar o sinal DAS por canal é através da energia por banda de frequência (FBE em inglês), proposta por \citet{sharma_2021}, onde uma transformada rápida de Fourier é aplicada em uma janela de tempo e integra-se o resultado em um intervalo de frequências. Como toda a operação permanece no domínio da frequência, optou-se por não usar este atributo neste trabalho.
 
-  \section{Processamento do sinal DAS e definição do filtro}
+  \section{Processamento do sinal DAS e seleção do filtro}
 
   O sinal DAS é composto por diferentes contribuições, incluindo efeitos de turbulência do escoamento, deformações mecânicas e variações térmicas. Para isolar os efeitos associados ao escoamento, foi necessário aplicar técnicas de processamento de sinal.
   
   Esses fenômenos devem ser separados para que o sinal DAS possa representar, de forma mais fidedigna, a vibração oriunda da turbulência do fluxo e ser capaz de estimar a vazão de injeção. \citet{panhuis_2014} mencionam a importância da seleção correta das bandas de frequência, sugerindo as de média e alta frequência para a análise de escoamentos através de ICVs e VGLs.
   
-  Tendo em vista que as principais referências bibliográficas propõem uso de filtros com banda de frequência alta demais para esse conjunto de dados, ficando acima do Nyquist do sinal adquirido, foi necessário realizar um estudo independente analisando bandas menores.
+  Tendo em vista que as principais referências bibliográficas propõem uso de filtros com banda de frequência alta demais para esse conjunto de dados, ficando acima do Nyquist do sinal adquirido, foi necessário realizar um estudo independente analisando bandas menores. A única ressalva encontrada na literatura é \citet{zhu_2025}, que recomenda uma banda de frequência de 50 a 200 Hz.
   
   Inicialmente, foram construídos espectrogramas com o objetivo de identificar os picos de frequência presentes no sinal. Para cada estágio, são gerados quatro espectrogramas a partir da combinação de dois intervalos de profundidade - um na região dos canhoneados e outro em uma zona acima - e dois intervalos de tempo - em condição sem fluxo e com fluxo constante. Essa abordagem permitiu distinguir o ruído de fundo, os componentes associados à turbulência do escoamento na coluna e outras possíveis fontes de ruído.
   
   Considerando a elevada energia envolvida no processo de fraturamento do reservatório, espera-se que os picos de energia nos espectrogramas estejam concentrados em baixas frequências. Os espectrogramas foram calculados por meio da transformada de Fourier de curto tempo (STFT), utilizando a biblioteca do SciPy, com janelas de 1 e 4 segundos, dependendo da banda de frequência analisada. Como a transformada é aplicada individualmente a cada canal, os resultados são posteriormente agregados por meio da mediana ao longo dos canais, de modo a obter uma medida robusta e representativa da perturbação na profundidade de interesse.
   
-  Dando continuidade a análise espectral, foi realizada uma investigação para identificar a banda de frequência mais adequada para realçar os componentes de interesse e reduzir a influência de ruídos indesejados. Para isso, aplicou-se um filtro passa-banda do tipo Butterworth, considerando uma frequência de amostragem de 2 kHz e diferentes opções de bandas, utilizando a função butter do SciPy para a definição do filtro em seções de segunda ordem (SOS), o que garante maior estabilidade numérica. A filtragem foi conduzida de forma bidirecional (fase zero) por meio da função sosfiltfilt (SciPy), evitando distorções de fase que poderiam comprometer a interpretação temporal dos eventos. Adicionalmente, considerando a presença de lacunas nos dados, os sinais foram segmentados automaticamente em trechos contínuos a partir da análise dos intervalos de amostragem, sendo o filtro aplicado individualmente em cada segmento válido.
+  Dando continuidade a análise espectral, foi realizada uma investigação para identificar a banda de frequência mais adequada para realçar os componentes de interesse e reduzir a influência de ruídos indesejados. Para isso, aplicou-se um filtro passa-banda do tipo Butterworth, considerando uma frequência de amostragem de 2 kHz e diferentes opções de bandas de frequência, utilizando a função butter do SciPy em seções de segunda ordem (SOS), o que garante maior estabilidade numérica. A filtragem foi conduzida de forma bidirecional (fase zero) por meio da função sosfiltfilt (SciPy), evitando distorções de fase que poderiam comprometer a interpretação temporal dos eventos. Adicionalmente, considerando a presença de lacunas nos dados, os sinais foram segmentados automaticamente em trechos contínuos a partir da análise dos intervalos de amostragem, sendo o filtro aplicado individualmente em cada segmento válido.
   
   Para cada banda de frequência avaliada, foi então calculado um atributo de energia em janelas temporais de 1 segundo e acumulado nos canais correspondentes à profundidade dos canhoneados. Essa escolha de janela temporal tem por objetivo deixar o DAS na mesma frequência dos dados operacionais de fraturamento. Essas curvas foram comparadas com as curvas reportadas de vazão de injeção do fluido de fraturamento, adotando-se como critério de seleção a banda de frequência cuja resposta temporal apresentou maior aderência qualitativa ao comportamento das vazões.
 
@@ -415,9 +415,9 @@
       \item A concentração do propante é suficiente para caracterizar a influência deste componente, podendo-se desprezar outras características como a composição.
   \end{enumerate}
   
-  Um \textit{DataFrame} do Pandas foi criado para agrupar os dados utilizados, contendo as seguintes colunas: número do estágio, marcador de tempo (\textit{timestep}), atributo de energia do DAS, vazão de injeção de fluido limpo na superfície (CFLD RATE), vazão de injeção de fluido com propante na superfície (SLUR RATE), concentração de propante na superfície (PROP CON), concentração de propante no fundo de poço (BH PROP CON), pressão de injeção na superfície (TR PRESS) e número de canhoneados. O atributo de energia foi extraído em janelas de 1 segundo e acumulado nos canais relativos às profundidades dos estágios. Além disso, ele passou por um processo de suavização através de média móvel e foi interpolado para sincronizar com os dados operacionais. Em alguns momentos, foi reportado haver pressão de injeção mesmo com vazão nula. Acredita-se que isso pode ter ocorrido por testes no sistema. Nestes casos, a pressão foi zerada.
+  Um \textit{DataFrame} do Pandas foi criado para agrupar os dados utilizados, contendo as seguintes colunas: número do estágio, marcador de tempo (\textit{timestep}), atributo de energia do DAS, vazão de injeção de fluido limpo na superfície (CFLD RATE), vazão de injeção de fluido com propante na superfície (SLUR RATE), concentração de propante na superfície (PROP CON), concentração de propante no fundo de poço (BH PROP CON), pressão de injeção na superfície (TR PRESS) e número de canhoneados. O atributo de energia foi extraído em janelas de 1 segundo e acumulado nos canais relativos às profundidades dos estágios. Além disso, ele passou por um processo de suavização com média móvel de 30 segundos centrada e interpolado para recuperar a frequência de 1 Hz. Em alguns momentos, foi reportado haver pressão de injeção mesmo com vazão nula. Acredita-se que isso pode ter ocorrido por testes no sistema. Nestes casos, a pressão foi zerada.
   
-  Para cada estágio de fraturamento, entre o atributo de energia do DAS e as variáveis operacionais selecionadas, foram calculadas correlações de Pearson e de Spearman usando a função do Pandas e a informação mútua com o Scikit-learn. Os resultados foram exibidos em gráficos do tipo boxplot gerados com o Seaborn.
+  Para cada estágio de fraturamento, entre o atributo de energia do DAS e as variáveis operacionais selecionadas, foram calculadas correlações de Pearson e de Spearman usando a função do Pandas e a informação mútua com o Scikit-learn. Os resultados foram exibidos em gráficos do tipo \textit{boxplot} gerados com o Seaborn.
   
   A correlação de Spearman se diferencia da de Pearson por ir além da captura de relações lineares, avaliando associações monotônicas com base nos ranks dos dados, o que a torna mais robusta a outliers e capaz de identificar relações não lineares desde que mantenham uma ordem consistente; já a correlação de Pearson mede apenas a intensidade de relações lineares e é mais sensível a valores extremos \citep{spearman}. Por sua vez, a informação mútua é interessante porque não assume nenhum tipo específico de relação (linear ou monotônica), sendo capaz de capturar dependências arbitrárias entre variáveis, inclusive relações altamente não lineares ou complexas, oferecendo assim uma medida mais geral da informação compartilhada entre elas \citep{mutual_information}.
   
@@ -432,6 +432,7 @@
   Os parâmetros operacionais vazão de injeção de fluido limpo na superfície, concentração de propante no fundo do poço e pressão de injeção na superfície, além do número de canhoneados, foram escolhidos para as etapas seguintes.
 
   \subsection{Modelagem estatística via GAM}
+  \label{secao:gam}
 
   Segundo \citet{curso_gam} e o tutorial do pyGAM, modelos lineares são ótimos para interpretar os efeitos dos preditores na variável de resposta, mas não conseguem modelar efeitos não lineares, o que é o caso da vibração acústica sentida pela fibra óptica. Por outro lado, modelos caixa-preta de aprendizado de máquina são mais versáteis na modelagem, mas oferecem pouca ou nenhuma capacidade de interpretação.
   
@@ -459,13 +460,14 @@
 
   A ideia, deste modelo, é que o atributo de energia responda principalmente a uma vazão média influenciada pela combinação de vazão com número de canhoneados. Espera-se que a concentração de propante seja importante para explicar a variância dos dados, mas que a pressão de injeção tenha pouco efeito.
   
-  O modelo foi testado incialmente com algumas simplificações, onde alguns termos eram retirados, e para diferentes valores de penalização global (\(\lambda\)) para o ajuste. Os resultados foram comparados com gráficos de graus de liberdade efetivo; de pseudo-R² e; de critério de informação Akaike, todos pela penalização.
+  O modelo foi testado incialmente com algumas simplificações, onde alguns termos eram retirados, e para diferentes valores de penalização global (\(\lambda\)) para o ajuste. Os resultados foram comparados com gráficos de graus de liberdade efetiva; de pseudo-R\textsuperscript{2} e; de critério de informação Akaike, todos pela penalização.
   
-  Em seguida, o modelo completo foi analisado através de gráficos de Resíduos pelos valores ajustados, pela vazão de injeção, pelo número de canhoneados, pela concentração de propante no fundo do poço e pela pressão de injeção e de um gráfico quantil-quantil (Q-Q plot) para avaliar a normalidade dos resíduos.
+  Em seguida, o modelo completo foi analisado através de gráficos de resíduos pelos valores ajustados, pela vazão de injeção, pelo número de canhoneados, pela concentração de propante no fundo do poço e pela pressão de injeção e de um gráfico quantil-quantil (Q-Q plot) para avaliar a normalidade dos resíduos.
   
   Por fim, apresenta-se o sumário de ajuste do modelo completo com penalização global de 1, onde são feitas as considerações finais acerca da influência de cada parâmetro operacional.
 
   \section{Modelagem do problema inverso com aprendizado de máquina}
+  \label{secao:ML}
 
   Com base nas análises de correlação, de informação mútua, na visualização exploratória e na modelagem aditiva generalizada, o atributo de energia extraído do DAS mostrou apresentar uma dependência funcional em relação à vazão de injeção do fluido limpo na superfície, com modulação sistemática pelo número de canhoneados, pela concentração de propante no fundo do poço e pela pressão de injeção na superfície. Esses resultados são consistentes com a física esperada da vibração induzida por escoamento em restrições, cenário esperado para poços poços revestidos e fraturados hidraulicamente.
   
@@ -480,7 +482,7 @@
       
   \end{itemize}
   
-  A seleção do melhor modelo foi feita através de gráficos de boxplot com o Matplotlib das métricas raiz do erro quadrático médio (RMSE em inglês) e erro absoluto médio (MAE em inglês).
+  A seleção do melhor modelo foi feita através de gráficos de \textit{boxplot} com o Matplotlib das métricas raiz do erro quadrático médio (RMSE em inglês) e erro absoluto médio (MAE em inglês).
   
   O melhor modelo foi retreinado com os conjuntos de dados de treino e de validação e avaliado usando as métricas RMSE e MAE no conjunto de dados de teste. Gráficos comparando as vazões de injeção de fluido limpo na superfície foram criados com o Matplotlib para os estágios de fraturamento do conjunto de teste.
   
@@ -507,11 +509,11 @@
       \label{fig:var_das_canais_estagios}
   \end{figure}
 
-  Os estágios não foram canhoneados de forma uniforme ao longo de todo intervalo reportado, mas concentrados em quatro ou cinco intervalos menores chamados de \textit{clusters}. Uma questão relevante consistia em avaliar se a resolução espacial do DAS seria suficiente para identificar individualmente os \textit{clusters}. Portanto, foram criados gráficos, da variância calculada anteriormente pela profundidade e canais. Desta vez, ao invés de mostrar topo e base de cada estágio, foram mostrados os topos e bases de cada \textit{cluster}.
+  Os estágios não foram canhoneados de forma uniforme ao longo de todo intervalo reportado, mas concentrados em quatro ou cinco intervalos menores chamados de \textit{clusters}. Uma questão relevante consistia em avaliar se a resolução espacial do DAS seria suficiente para identificar individualmente os \textit{clusters}. Portanto, foram criados gráficos da variância calculada anteriormente pela profundidade e canais. Desta vez, ao invés de mostrar topo e base de cada estágio, foram mostrados os \textit{cluster}. Com base nesses gráficos, foram definidos os canais topo e base de cada estágio através da seleção daqueles de maior variância.
   
-  As \autoref{fig:identificacao_canais_18} e \autoref{fig:identificacao_canais_16} mostram esses gráficos para os estágios 18 e 16, respectivamente. A primeira representa um caso representativo com boa definição dos picos onde um ou dois canais parecem reagir a cada \textit{cluster} com vales bem definido entre eles. Já a segunda figura ilustra um outro onde a identificação dos \textit{clusters} não é clara, havendo desde sobreposição de efeitos até a ausência do pico de um \textit{cluster}, que pode não ter sido fraturado de forma eficiente. Estes gráficos foram aproveitados para a definição dos canais que fazem parte do estágio e devem ser considerados na etapa seguinte de extração do atributo de energia.
+  As \autoref{fig:identificacao_canais_18} e \autoref{fig:identificacao_canais_16} mostram os gráficos para os estágios 18 e 16, respectivamente. A primeira figura ilustra um caso com boa definição dos picos onde um ou dois canais parecem reagir a cada \textit{cluster} com vales bem definidos entre eles. Já a segunda figura apresenta um outro onde a identificação dos \textit{clusters} não é clara, havendo desde sobreposição de efeitos até a ausência do pico de um \textit{cluster}, que pode não ter sido fraturado de forma eficiente. Além disso, é possível perceber que não há um alinhamento perfeito entre os picos e os \textit{clusters}, principalmente quando comparados estágios diferentes. Acredita-se que essa discrepância esteja relacionada à forma de instalação da fibra, que pode apresentar folgas variáveis entre os pontos de fixação.
   
-  Os demais gráficos estão presentes no \autoref{anexo:canais}. Neles, é possível perceber que não há um alinhamento perfeito entre os picos e os \textit{clusters}, principalmente quando comparados estágios diferentes. Acredita-se que essa discrepância esteja relacionada à forma de instalação da fibra, que pode apresentar folgas variáveis entre os pontos de fixação.
+  % Os demais gráficos estão presentes no \autoref{anexo:canais}. Neles, é possível perceber que não há um alinhamento perfeito entre os picos e os \textit{clusters}, principalmente quando comparados estágios diferentes. Acredita-se que essa discrepância esteja relacionada à forma de instalação da fibra, que pode apresentar folgas variáveis entre os pontos de fixação.
 
   \begin{figure}
       \centering
@@ -523,48 +525,318 @@
   \begin{figure}
       \centering
       \includegraphics[width=0.75\linewidth]{dist/identificacao_canais/estagio16.png}
-      \caption{Variância do sinal DAS em função da profundidade para o estágio 16. Diferentemente da \autoref{fig:identificacao_canais_18}, observa-se menor definição dos picos associados aos \textit{clusters}, com sobreposição de efeitos e ausência de resposta clara em alguns intervalos. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \caption{Variância do sinal DAS em função da profundidade para o estágio 16. Diferentemente da \autoref{fig:identificacao_canais_18}, observa-se menor definição dos picos, com sobreposição de efeitos dos dois primeiros \textit{clusters} e ausência de resposta clara do terceiro \textit{cluster}. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
       \label{fig:identificacao_canais_16}
   \end{figure}
 
-  Uma última sequência de gráficos foi elaborada para concluir esta etapa. Nela, um mapa de calor da variância calculada em janelas de 30 segundos foi empilhado verticalmente em gráficos de vazão e pressão de injeção na superfície e de concentrações de propante na superfície e no fundo do poço pelo tempo. O mapa de calor foi alinhado lateralmente com um eixo de profundidade medida (MD) indicando as profundidades dos estágios de fraturamento.
+  Uma última sequência de gráficos foi elaborada para concluir esta etapa. Nela, um mapa de calor da variância calculada em janelas de 30 segundos foi empilhado verticalmente abaixo de gráficos de vazão e pressão de injeção na superfície e de concentrações de propante na superfície e no fundo do poço pelo tempo. O mapa de calor foi alinhado lateralmente com um eixo de profundidade medida (MD) indicando as profundidades dos estágios de fraturamento.
   
-  A Figura 4 apresenta o gráfico para o estágio 7, considerada representativa do conjunto, e os gráficos dos demais estágios estão no \autoref{anexo:das_operacionais}. A análise deste gráfico permite destacar que:
+  % A \autoref{fig:mapa_calor_Var_vazao} apresenta o gráfico para o estágio 7, considerada representativa do conjunto, e os gráficos dos demais estágios estão no \autoref{anexo:das_operacionais}. A análise deste gráfico permite destacar que:
+  A \autoref{fig:mapa_calor_Var_vazao} apresenta o gráfico para o estágio 7, considerada representativa do conjunto, de onde se destaca que:
 
   \begin{itemize}
       \item A variância muda rapidamente com a vazão, apresentando mudanças bem verticalizadas nos canais. Isso sugere que a resposta do sistema ocorre de forma quase instantânea à variação de vazão, consistente com o comportamento esperado de um fluido de baixa compressibilidade.
-      \item Os últimos canais estão com ruído, como observado na Figura 1, e o canal 493 (último) está inoperante, apresentando valores zerados.
-      \item Existe uma faixa diagonal azul esverdeada que começa nos primeiros canais junto com o início da injeção, sendo possivelmente associado a efeitos térmicos decorrentes da injeção de fluido a temperatura distinta.
+      \item Os últimos canais estão com ruído, como observado na \autoref{fig:var_das_canais_estagios}, e o canal 493 (último) está inoperante, apresentando valores zerados.
+      \item Existe uma faixa diagonal azul esverdeada que começa nos primeiros canais durante o início da injeção, sendo possivelmente associado a efeitos térmicos decorrentes da injeção de fluido a temperatura distinta.
   \end{itemize}
 
   \begin{figure}
       \centering
-      \includegraphics[width=0.75\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S07F.png}
+      \includegraphics[width=0.7\linewidth]{dist/Graficos_DAS_variancia_30s/grafico_variancia_30s_S07F.png}
       \caption{Mapa de calor da variância do sinal DAS (escala logarítmica) do estágio de fraturamento 7 em função do canal e da profundidade medida (MD em inglês) e do tempo. A variância foi calculada em janelas de 30 segundos. O gráfico é apresentado em conjunto com as séries temporais de vazão, pressão de injeção e concentração de propante, possibilitando a análise integrada das variáveis. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
       \label{fig:mapa_calor_Var_vazao}
   \end{figure}
 
   A análise exploratória fornece evidências de que o sinal DAS, representado pela variância, responde de forma consistente à injeção de fluido, com maior intensidade nas regiões associadas aos estágios e aos \textit{clusters}. Na próxima seção, é apresentada a análise espectral do sinal, com o objetivo de definir o filtro mais adequado para isolar as componentes associadas ao escoamento.
 
-  \section{Análise espectral e definição do filtro}
+  \section{Análise espectral e seleção do filtro}
+
+  A \autoref{fig:esctrograma_1s_S07F} apresenta quatro espectrogramas criados a partir da agregação, via mediana, da transformada de Fourier de curto tempo, em janelas de 1 segundo, de canais selecionados do estágio de fraturamento 7.
+  
+  % O comportamento dos espectrogramas deste estágio é representativo dos demais, que podem ser vistos no Apêndice C.
+  
+  A diferença entre a primeira e segunda linhas é se o poço está em fluxo ou não, respectivamente. A diferença entre a primeira coluna é a posição dos canais selecionados. No primeiro caso, os canais estão na profundidade do estágio. Já no segundo caso, estão numa posição mais distal, longe da interferência da turbulência do fluxo pelos canhoneados e de efeitos mecânicos do fraturamento.
+  
+  Com base na figura, observou-se que os espectrogramas são similares nas profundidades do estágio e mais acima no período sem fluxo, o que era esperado para uma fibra que está captando ruído de fundo basicamente. Na profundidade do estágio, durante o fluxo de injeção do fluido fraturamento, observou-se maior densidade espectral de potência (PSD em inglês) nas baixas frequências. Atribui-se esse comportamento aos processos mecânicos associados à operação de fraturamento hidráulico e ao bom acoplamento mecânico entre a fibra e a formação proporcionado pelo cimento presente no anular.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/S07F_spectrogram_0_1000Hz.png}
+      \caption{Espectrogramas obtidos a partir da agregação, via mediana, das transformadas de Fourier de curto tempo (STFT) calculadas para canais selecionados do estágio de fraturamento 7. A primeira linha corresponde a períodos com fluxo (FLOW) e a segunda, a períodos sem fluxo (NOFLOW). A primeira coluna representa canais localizados na profundidade do estágio (PERF) e a segunda, canais posicionados acima da região dos canhoneados (CTRL). Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:esctrograma_1s_S07F}
+  \end{figure}
+
+  Porém, o pico de energia nas frequências mais baixas do espectrograma dos canais mais acima do poço, durante o período de fluxo, não era esperado. Por isso, o sinal foi reprocessado utilizando janelas de 4 segundos, aumentando a resolução espectral na faixa de baixas frequências e permitindo uma melhor visualização dos componentes entre 0 e 50 Hz, e apresentado na \autoref{fig:esctrograma_4s_S07F}.
+  
+  Nesta figura, no espectrograma dos canais mais rasos, aparecem picos distintos em frequências em torno de 10 Hz e com possíveis harmônicos em frequências superiores. Isto sugere a existência de uma excitação mecânica aproximadamente periódica possivelmente associada a bomba de injeção do fluido de fraturamento na superfície. Os picos principais também podem ser observados no espectrograma dos canais mais profundos que, além deles, apresenta um intervalo de frequências de maior conteúdo energético entre 2 e 8 Hz. Este intervalo estaria associado aos efeitos mecânicos do processo de fraturamento hidráulico, dado que efeitos térmicos seriam mais aparentes abaixo de 0.5 Hz \citep{haavik_2023}.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/S07F_spectrogram_0_50Hz.png}
+      \caption{Reprocessamento dos espectrogramas da \autoref{fig:esctrograma_1s_S07F} utilizando janelas de 4 segundos, com foco na faixa de 0 a 50 Hz. O aumento da resolução espectral permite identificar componentes discretas de baixa frequência potencialmente associadas a fontes mecânicas e aos efeitos do fraturamento hidráulico. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:esctrograma_4s_S07F}
+  \end{figure}
+
+  Esperava-se encontrar intervalos de maior densidade espectral de potência em frequências intermediárias e altas que, conforme revisão da literatura, estariam associadas ao escoamento turbulento em restrições. Tendo em vista que isto não ocorreu, foram extraídos atributos de energia do sinal bruto e com diferentes filtros aplicados visando avaliar qualitativamente qual faixa de frequência produzia um atributo de energia cuja evolução temporal apresentasse maior aderência à vazão reportada. Os atributos de energia foram extraídos em janelas de 1 segundo e agregados nos canais referentes a cada estágio. Os filtros testados estavam nas seguintes faixas de frequência: 50 a 200 Hz; 100 a 200 Hz; acima de 500 Hz e; acima de 700 Hz.
+  
+  A \autoref{fig:filtros_diversos_S12F} apresenta essas séries temporais comparadas com a vazão de injeção de fluido com propante para o estágio 12. No atributo de energia extraído do sinal bruto DAS, observa-se um grande pico de energia no início da injeção que desaparece nas séries filtradas, estando provavelmente associado ao início da formação da fratura. Os filtros intermediários ainda não foram capazes de representar a curva de vazão de injeção de forma satisfatória. Em especial, com relação trechos iniciais menores de injeção e o final, onde há um aumento no valor de atributo de energia apesar da vazão constante. Os filtros passa-alta apresentaram um ótimo resultado, com comportamento aproximadamente proporcional à vazão reportada.
+
+  % Os gráficos dos demais estágios estão presentes no Apêndice D.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.7\linewidth]{dist/cap5/atrib_energ_1s_filtros_diversos_S12F.png}
+      \caption{Comparação entre os atributos de energia extraídos do sinal bruto e dos sinais filtrados para o estágio de fraturamento 12. As séries foram empilhadas juntamente com a vazão de injeção, permitindo avaliar qualitativamente a aderência temporal de cada configuração de filtragem. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:filtros_diversos_S12F}
+  \end{figure}
+
+  Para a próxima etapa, a análise do problema direto, foi utilizado o atributo de energia extraído do sinal DAS após a aplicação do filtro passa-alta de 700 Hz.
 
   \section{Análise do problema direto}
+  \label{secao:resultados_problema_direto}
 
+  Um \textit{DataFrame} do Pandas foi montado para agrupar as variáveis analisadas nas etapas seguintes e gráficos de séries temporais foram feitos para permitir a inspeção dos dados. A \autoref{fig:ae_suavizado_parametos_s07f} apresenta um gráfico criado para o estágio 7, de onde é possível se obter as seguintes constatações:
+  
+  \begin{itemize}
+      \item Vazões baixas possuem têm pouca resposta no atributo de energia, o que pode ser explicado por haver um fluxo mais próximo ao laminar do que ao turbulento.
+      \item A vazão de injeção de fluido com propante é função da vazão de injeção de fluido limpo e da concentração de propante na superfície. Neste caso, não deve haver necessidade de se seguir com as duas durante todo o processo.
+      \item As concentrações de propante na superfície e no fundo do poço contém a mesma informação apenas deslocada no tempo. Desta forma, apenas uma delas deve permanecer também.
+  \end{itemize}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.7\linewidth]{dist/cap5/S07F_atrib_energ_1s_vaz_conc_press.png}
+      \caption{Séries temporais de vazão de injeção, concentração de propante, pressão de injeção e atributo de energia para o estágio 7. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:ae_suavizado_parametos_s07f}
+  \end{figure}
+
+  A análise estatística descritiva bivariada foi realizada através de cálculos de correlação de Pearson e de Spearman e de informação mútua entre o atributo de energia e os parâmetros operacionais selecionados. Os resultados foram agregados e consolidados em gráficos do tipo \textit{boxplot} e apresentados nas \autoref{fig:correlacoes} e \autoref{fig:mutual_information}.
+  
+  Observa-se que as vazões de injeção possuem valores altos tanto nas correlações quanto na informação mútua com uma leve vantagem para a vazão de injeção de fluido limpo. A pressão de injeção apresentou valores altos também, mas eles devem ser considerados com cautela tendo em vista que a pressão não é um parâmetro de controle. As concentrações apresentaram valores baixos de correlação, mas altos de informação mútua, sugerindo a existência de dependência estatística não adequadamente descrita por correlações lineares ou monotônicas. A vazão de injeção de fluido limpo e a concentração de propante no fundo do poço foram escolhidas para as etapas seguintes junto da pressão de injeção.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/boxplot_pearson_spearman.png}
+      \caption{\textit{Boxplot} agregando correlações de Pearson e de Spearman entre o atributo de energia e os parâmetros operacionais. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:correlacoes}
+  \end{figure}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/boxplot_mutual_information.png}
+      \caption{\textit{Boxplot} agregando informação mútua entre o atributo de energia e os parâmetros operacionais. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:mutual_information}
+  \end{figure}
+
+  Gráficos adicionais foram criados para dar auxiliar na interpretação dos resultados. A \autoref{fig:propante_vs_AE} contém um gráfico de dispersão do atributo de energia pela concentração de propante no fundo do poço para o estágio 7. Mesmo a concentração de propante variando em forma de degraus, é possível observar uma forte relação entre esses dois parâmetros. A forma não linear observada na curva média, combinada com a dispersão induzida por outras variáveis operacionais, ajuda a explicar os baixos valores das correlações observados anteriormente. Isso ocorre porque há uma grande variação no valor de atributo de energia em função da variação de vazão nos períodos de injeção sem propante.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.7\linewidth]{dist/cap5/grafico_concentracao_ae.png}
+      \caption{Gráfico de dispersão do atributo de energia pela concentração de propante no fundo do poço para o estágio 7. A linha laranja é formada pelos pontos médios de cada nível de concentração. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:propante_vs_AE}
+  \end{figure}
+
+  A \autoref{fig:vazao_vs_AE} foi criada para expor o impacto do número de canhoneados no atributo de energia em função da vazão de injeção do fluido limpo. Os estágios com 26, 30 e 32 canhoneados foram agrupados em um único grupo e os dois outros grupos são de 40 e 50 canhoneados. Gráficos de dispersão foram criados para cada grupo com linhas suavizadas de média e de um desvio padrão para cima e para baixo, dos quais extraiu-se as seguintes observações:
+
+  \begin{itemize}
+      \item Observa-se uma mudança de comportamento da relação entre o atributo de energia e a vazão em torno de 20 bbl/min em todos os grupos.
+      \item No padrão de injeção superior, a relação entre o atributo de energia e a vazão possui comportamento próximo ao linear nos grupos de 26 a 32 e 40 canhoneados, enquanto assume um comportamento mais parabólico no terceiro grupo.
+      \item Para uma mesma vazão, em média, quanto maior o número de canhoneados, menor o valor do atributo de energia. Isso é coerente com a física que diz que, quanto maior a área aberta ao fluxo, menor a turbulência.
+      \item Existem valores de atributo de energia altos para vazões nulas, cuja justificativa permanecerá pendente para trabalhos futuros.
+      \item Durante a elaboração deste gráfico, foi observado um comportamento divergente para o estágio 17. Como ele possui um canhoneio restrito, optou-se em desconsiderar este estágio desta figura e das etapas seguintes, deixando a sua avaliação para próximos trabalhos.
+  \end{itemize}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/grafico_vazao_ae_canhoneados.png}
+      \caption{Gráficos de dispersão do atributo de energia pela vazão de injeção de fluido limpo agrupados pelo número de canhoneados. A linha vermelha é uma média suave dos pontos e as laranjas tracejadas, um desvio padrão suave para cima e para baixo. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:vazao_vs_AE}
+  \end{figure}
+
+  A \autoref{fig:pressao_vs_ae} permite avaliar o efeito da pressão no atributo de energia separado, também, pelos mesmos grupos de canhoneados da figura anterior. Para pressões acima de 8000 psi, que equivale a 57\% dos pontos, o atributo de energia parece ter uma correlação muito fraca com a pressão. Isso pode ser comprovado quando se compara a média da correlação de Pearson dos estágios usando todos os dados (0.84) e usando apenas os valores de pressão acima de 8000 psi (0.28).
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/grafico_pressao_ae_canhoneados.png}
+      \caption{Gráficos de dispersão do atributo de energia pela pressão de injeção agrupados pelo número de canhoneados. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:pressao_vs_ae}
+  \end{figure}
+
+  Estes resultados reforçam a ideia de que a vazão de injeção de fluido limpo é a variável de controle principal e que a pressão parece atuar como uma variável de estado associada às condições hidráulicas do sistema e à resistência oferecida pela formação ao processo de fraturamento. Tanto o número de canhoneados quanto a concentração de propante atuariam modelando a resposta da fibra óptica.
+  
+  Seis modelos aditivos generalizados (GAM em inglês) foram construídos a partir de variações da \autoref{eq:modelo_gam} para avaliar a influência, no atributo de energia, dos seguintes parâmetros: vazão de injeção de fluido limpo; concentração de propante no fundo do poço; pressão de injeção e; número de canhoneados.
+
+  \begin{enumerate}
+      \item M1a: termo spline de vazão formado por até 15 splines.
+      \item M1b: termo spline de pressão formado por até 15 splines.
+      \item M2: modelo M1a somado a um termo de tensor de vazão e de número de canhoneados.
+      \item M3a: modelo M2 somado a um termo categórico de concentração de propante.
+      \item M3b: modelo M2 somado a um termo spline de pressão formado por até 15 splines.
+      \item M4: modelo M3a somado a um termo spline de pressão formado por até 15 splines.
+  \end{enumerate}
+  As variações “a” e “b” dos modelos M1 e M3 foram construídas para avaliar a contribuição relativa da pressão em comparação com a vazão e a concentração de propante, respectivamente, para a capacidade explicativa do modelo. Esses modelos foram comparados entre si e variando os valores de penalização global (\(\lambda\)) de 10\textsuperscript{-2} a 10\textsuperscript{3} através de gráficos de graus de liberdade efetiva (\autoref{fig:GAM_DoF_6modelos}), de pseudo-R\textsuperscript{2} (\autoref{fig:GAM_pR2_6modelos}) e de critério de informação Akaike (AIC em inglês) (\autoref{fig:GAM_AIC_6modelos}).
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.7\linewidth]{dist/cap5/GAM_DoF_6modelos.png}
+      \caption{Número de graus de liberdade efetiva em função do valor de penalização global (\(\lambda\)) para os diferentes modelos GAM propostos. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:GAM_DoF_6modelos}
+  \end{figure}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.7\linewidth]{dist/cap5/GAM_pR2_6modelos.png}
+      \caption{Valor de pseudo-R\textsuperscript{2} em função do valor de penalização global (\(\lambda\)) para os diferentes modelos GAM propostos. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:GAM_pR2_6modelos}
+  \end{figure}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.7\linewidth]{dist/cap5/GAM_AIC_6modelos.png}
+      \caption{Valor de critério de informação Akaike (AIC em inglês) em função do valor de penalização global (\(\lambda\)) para os diferentes modelos GAM propostos. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:GAM_AIC_6modelos}
+  \end{figure}
+
+  O número de graus de liberdade efetivos aumenta significativamente com a incorporação de mais termos no GAM, conforme mostrado na \autoref{fig:GAM_DoF_6modelos}. Isso aumenta o risco de sobreajuste que deve ser controlado pelos parâmetros de penalização. Nestes casos, esses parâmetros foram definidos de forma global.
+  
+  As \autoref{fig:GAM_pR2_6modelos} e \autoref{fig:GAM_AIC_6modelos} mostram que o número de canhoneados apresenta uma grande melhora nos resultados de pseudo-R\textsuperscript{2} e AIC, confirmando a importância constatada na \autoref{fig:vazao_vs_AE}. Já a concentração de propante apresenta uma melhoria modesta, mas ainda significativa para a compreensão do fenômeno.
+  
+  A pressão, porém, é uma variável de efeito incerto no atributo de energia. Sozinha, com base no modelo M1b, observa-se que é capaz de explicar cerca 84\% da variância do atributo de energia (pseudo-R\textsuperscript{2} de 0.84) e tem valores razoáveis de AIC. Mas perde relevância quando agrupada com termos de outros parâmetros. É o que acontece quando se incluiu ela nos modelos M3b e M4, onde pouco aprimora os resultados em relação aos modelos anteriores apesar do aumento significativo do número de graus de liberdade efetivo.
+  
+  O modelo GAM completo (M4) foi avaliado com valores distintos de penalização global (\(\lambda\)) de 0.01, 1 e 100 através de gráficos de resíduos pelos valores ajustados (\autoref{fig:gam_6modelos_residuos_ajustados}), pela vazão de injeção (\autoref{fig:gam_6modelos_residuos_vazao}), pela pressão de injeção (\autoref{fig:gam_6modelos_residuos_pressao}), pelo número de canhoneados (\autoref{fig:gam_6modelos_residuos_canhoneados}) e pela concentração de propante no fundo do poço (\autoref{fig:gam_6modelos_residuos_concentracao}) e de gráficos quantil-quantil (Q-Q plot) (\autoref{fig:gam_6modelos_qqplot}), com as seguintes constatações:
+
+  \begin{itemize}
+      \item Existem valores de resíduo altos em momentos sem fluxo no poço ou com vazões muito altas, marcados com “OBS 1” nos gráficos de valor ajustado, vazão e pressão. Estes valores provocam desvios na normalidade dos pontos, que pode ser constatado nos gráficos quantil-quantil que se afasta da reta vermelha. Para trabalhos futuros, será recomendada investigar o que provoca estes fenômenos.
+      \item Os gráficos de resíduo pela pressão mostram um aspecto de senoide amortecida nas curvas em pressões abaixo de 5000 psi para \(\lambda\) de 0.01 (mais intenso) e de 1 (mais suave). Esse padrão sistemático observado sugere que a componente associada à pressão tende a capturar variações específicas dos dados quando a penalização é insuficiente, aumentando o risco de sobreajuste \citep{curso_gam}. Se a penalização for alta demais, o modelo tende a uma função linear (ISMAY et al., 2024), o que explica o valor de pseudo-R\textsuperscript{2} ser próximo ao da correlação de Pearson.
+      \item Os modelos parecem bem ajustados nos parâmetros de número de canhoneados e de concentração de propante.
+  \end{itemize}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/gam_6modelos_residuos_ajustados.png}
+      \caption{Resíduo do modelo GAM completo (M4) pelo valor ajustado para diferentes valores de penalização global (\(\lambda\)). As marcações “OBS 1” mostram pontos de resíduo alto em períodos sem fluxo e com vazão alta que ainda necessitam de maior investigação. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:gam_6modelos_residuos_ajustados}
+  \end{figure}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/gam_6modelos_residuos_vazao.png}
+      \caption{Resíduo do modelo GAM completo (M4) pela vazão para diferentes valores de penalização global (\(\lambda\)). As marcações “OBS 1” mostram pontos de resíduo alto em períodos sem fluxo e com vazão alta que ainda necessitam de maior investigação. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:gam_6modelos_residuos_vazao}
+  \end{figure}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/gam_6modelos_residuos_pressao.png}
+      \caption{Resíduo do modelo GAM completo (M4) pela pressão para diferentes valores de penalização global (\(\lambda\)). As marcações “OBS 1” mostram pontos de resíduo alto em períodos sem fluxo e com vazão alta que ainda necessitam de maior investigação. A marcação "OBS 2" aponta para o intervalo do gráfico onde a curva possui aspecto de senoide amortecida, que é um indício de sobreajuste. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:gam_6modelos_residuos_pressao}
+  \end{figure}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/gam_6modelos_residuos_canhoneados.png}
+      \caption{Resíduo do modelo GAM completo (M4) pelo número de canhoneados para diferentes valores de penalização global (\(\lambda\)). Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:gam_6modelos_residuos_canhoneados}
+  \end{figure}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/gam_6modelos_residuos_concentracao.png}
+      \caption{Resíduo do modelo GAM completo (M4) pela concentração de propante para diferentes valores de penalização global (\(\lambda\)). Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:gam_6modelos_residuos_concentracao}
+  \end{figure}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/gam_6modelos_qqplot.png}
+      \caption{Gráfico quantil-quantil (Q-Q plot) para diferentes valores de penalização global (\(\lambda\)). Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:gam_6modelos_qqplot}
+  \end{figure}
+
+  Diante destes resultados, mais alguns gráficos foram construídos visando subsidiar a tomada de decisão sobre manter, ou não, a pressão como uma variável a ser considerada na modelagem do problema inverso. Três modelos GAM, todos com penalização global igual a 1, foram comparados: modelo completo M4 sem ajustes, modelo completo M4 com penalização de 100 apenas para a pressão e modelo M3a, que não contém o termo de pressão.
+  
+  As \autoref{fig:residuos_pressao_justifica_pressao} e \autoref{fig:residuos_vazao_justifica_pressao} apresentam gráficos de resíduo pela pressão e pela vazão, respectivamente, para esses três modelos. Aplicar uma penalização mais forte apenas para a pressão ajuda a mitigar o efeito de sobreajuste. Por outro lado, remover a pressão do modelo parece agravar a dispersão dos casos limítrofes reportados acima, fato confirmado pelo gráfico quantil-quantil da \autoref{fig:qqplot_justifica_pressao}. Portanto, optou-se por manter a pressão na análise do problema inverso através de modelos de aprendizado de máquina.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/residuos_pressao_justifica_pressao.png}
+      \caption{Resíduo pela pressão para diferentes modelos GAM. As marcações “OBS 1” mostram como a exclusão da pressão do modelo agrava o problema de resíduos altos em casos limítrofes. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:residuos_pressao_justifica_pressao}
+  \end{figure}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/residuos_vazao_justifica_pressao.png}
+      \caption{Resíduo pela vazão para diferentes modelos GAM. As marcações “OBS 1” mostram como a exclusão da pressão do modelo agrava o problema de resíduos altos em casos limítrofes. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:residuos_vazao_justifica_pressao}
+  \end{figure}
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.6\linewidth]{dist/cap5/qqplot_justifica_pressao.png}
+      \caption{Gráfico quantil-quantil (Q-Q plot) para diferentes modelos GAM. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:qqplot_justifica_pressao}
+  \end{figure}
+
+  Os resultados obtidos são consistentes com as premissas adotadas na \autoref{secao:gam}. A vazão de injeção de fluido limpo mostrou-se a principal variável de controle da resposta observada no DAS, enquanto o número de canhoneados e a concentração de propante atuam modulando essa resposta. A pressão de injeção, por sua vez, apresentou comportamento compatível com uma variável de estado secundária, contribuindo para a explicação de parte da variabilidade do sistema sem exercer papel dominante sobre a resposta do atributo de energia.
+  
   \section{Modelagem do problema inverso}
+
+  Conforme descrito na \autoref{secao:ML}, foram avaliados os modelos da biblioteca Scikit-learn Ridge, RandomForestRegressor, ExtraTreesRegressor e HistGradientBoostingRegressor. Optou-se por utilizar os hiperparâmetros padrão dessas implementações, uma vez que o objetivo desta etapa é comparar a capacidade preditiva dos modelos e não realizar uma busca exaustiva pela melhor configuração possível. Duas versões de cada modelo foram criadas para analisar o impacto da pressão como variável de entrada. O atributo de energia, o número de canhoneados e a concentração de propante fazem parte da lista de variáveis de entrada em todos os casos.
+  
+  Os modelos avaliados por meio de validação cruzada do tipo 4-fold, utilizando as métricas raiz do erro quadrático médio (RMSE em inglês) e erro absoluto médio (MAE em inglês), com os resultados compilados em forma de gráfico \textit{boxplot} na \autoref{fig:boxplot_rmse_mae}.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.9\linewidth]{dist/cap5/boxplot_rmse_mae.png}
+      \caption{Gráficos \textit{boxplot} das métricas raiz do erro quadrático médio (RMSE em inglês) e erro absoluto médio (MAE em inglês) dos modelos de aprendizado de máquina avaliados através de validação cruzada do tipo 4-fold. As cores azul e laranja se referem ao fato do modelo ter sido treinado tendo a pressão de injeção como variável de entrada ou não, respectivamente. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:boxplot_rmse_mae}
+  \end{figure}
+
+  A análise destes gráficos sugere que a pressão de injeção possui contribuição limitada para as métricas globais de erro e que os modelos baseados em árvore de decisão possuem comportamentos similares. Porém, tendo em vista a observação feita na \autoref{secao:resultados_problema_direto} de que a pressão pode ajudar a reduzir a dispersão de dados em casos limítrofes de injeção, decidiu-se avaliar as curvas reais e previstas baseadas no modelo ExtraTreesRegressor para os estágios de validação de cada grupo 4-fold.
+  
+  A \autoref{fig:compara_pressao_s23f}, relativa ao estágio 23 do primeiro grupo de validação cruzada, ilustra como esta preocupação tem fundamento. O modelo treinado sem a pressão como variável de entrada não foi capaz de estimar vazão zero para os períodos sem fluxo. Isso não foi uma regra para todos os estágios, mas ocorreu com uma frequência alta para ser desprezado. Ou seja, embora as métricas agregadas indiquem efeito limitado da pressão, a inspeção visual das previsões revelou benefícios em situações específicas.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.7\linewidth]{dist/cap5/compara_pressao_s23f.png}
+      \caption{Curvas de vazão real e previstas do estágio 23 para modelos baseados no ExtraTreesRegressor cuja diferença é ter a pressão como variável de entrada. Os marcadores “1” apontam para intervalos onde não há fluxo no poço, mas o modelo sem a pressão estimar haver vazão. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:compara_pressao_s23f}
+  \end{figure}
+
+  Por isso, escolheu-se o modelo de aprendizado de máquina ExtraTreesRegressor treinado com a pressão de injeção como variável de entrada como a melhor opção dentre as avaliadas para estimar a vazão de injeção a partir do atributo de energia do DAS. Este tipo de modelo foi selecionado por apresentar desempenho comparável aos melhores modelos avaliados, ao mesmo tempo em que possui uma estrutura relativamente simples e robusta.
+  
+  Após retreinar o modelo com os estágios dos grupos de treino e validação combinados, o modelo foi avaliado com os estágios do grupo de teste obtendo uma média da raiz do erro quadrático médio de 4.73 bbl/min e uma média do erro absoluto médio de 2.60 bbl/min.
+  
+  A \autoref{fig:vazao_inj_real_estimada_extra_trees} apresenta gráficos comparando as vazões reais e estimadas para os cinco estágios do grupo de testes. Pode-se observar que as curvas ficaram muito próximas e que o modelo conseguiu capturar o momento das variações de vazão sem atrasos, mesmo os picos esporádicos. As diferenças observadas podem estar associadas a fatores como: valores atípicos do atributo de energia, como identificado durante a análise dos modelos GAM; simplificações adotadas na modelagem, como a não erosão dos canhoneados, e; limitações inerentes ao conjunto de dados disponível.
+
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{dist/cap5/03_vazao_inj_real_estimada_extra_trees.png}
+      \caption{Gráficos de vazão real e estimada para os estágios do grupo de teste do modelo final treinado com os dados dos grupos de treino e de validação combinados. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \label{fig:vazao_inj_real_estimada_extra_trees}
+  \end{figure}
+
+  Os resultados obtidos indicam que o atributo de energia extraído do DAS contém informação suficiente para permitir a estimativa da vazão de injeção por meio de técnicas de aprendizado de máquina. A inclusão de variáveis complementares, como número de canhoneados, concentração de propante e pressão de injeção, contribuiu para melhorar a robustez dos modelos e reduzir ambiguidades associadas à interpretação do sinal.
   
   \chapter{Conclusões}
-
+  % Verificar:
+  % - Se tem lambdas, R2 mal formatados.
+  % - Boxplot sem estar em itálico.
+  % - Se sobrou overfitting em algum lugar.
+  
   \backmatter
 
   \bibliographystyle{coppe-plain}
   \bibliography{dissertacao}
 
-  \appendix
+  % \appendix
 
-  \chapter{Perfis de variância do sinal DAS nos estágios de fraturamento}
-  \label{anexo:canais}
+  % \chapter{Perfis de variância do sinal DAS nos estágios de fraturamento}
+  % \label{anexo:canais}
 
-  Este apêndice apresenta os perfis de variância do sinal DAS em função da profundidade para todos os estágios de fraturamento analisados, calculados em janelas de 5 minutos com vazão estável. Esses gráficos complementam a discussão apresentada na \autoref{item:aed}, em particular os exemplos mostrados nas \autoref{fig:identificacao_canais_18} e \autoref{fig:identificacao_canais_16}, e foram utilizados para auxiliar na identificação dos \textit{clusters} e na definição dos canais representativos de cada estágio.
+  % Este apêndice apresenta os perfis de variância do sinal DAS em função da profundidade para todos os estágios de fraturamento analisados, calculados em janelas de 5 minutos com vazão estável. Esses gráficos complementam a discussão apresentada na \autoref{item:aed}, em particular os exemplos mostrados nas \autoref{fig:identificacao_canais_18} e \autoref{fig:identificacao_canais_16}, e foram utilizados para auxiliar na identificação dos \textit{clusters} e na definição dos canais representativos de cada estágio.
 
   %   \begin{figure}
   %     \centering
@@ -748,10 +1020,10 @@
   %     \label{fig:ap_identificacao_canais_28}
   % \end{figure}
 
-  \chapter{Mapas de calor da variância do sinal DAS e parâmetros operacionais dos estágios de fraturamento}
-  \label{anexo:das_operacionais}
+  % \chapter{Mapas de calor da variância do sinal DAS e parâmetros operacionais dos estágios de fraturamento}
+  % \label{anexo:das_operacionais}
 
-  Este apêndice apresenta os mapas de calor da variância do sinal DAS calculada em janelas de 30 segundos para todos os estágios de fraturamento analisados. Os gráficos são apresentados em conjunto com as séries temporais de vazão de injeção, pressão na superfície e concentração de propante, permitindo a avaliação integrada do comportamento do sinal DAS e das condições operacionais. Esses resultados complementam a análise apresentada na \autoref{item:aed}, cujo exemplo é mostrado na Figura \autoref{fig:mapa_calor_Var_vazao}.
+  % Este apêndice apresenta os mapas de calor da variância do sinal DAS calculada em janelas de 30 segundos para todos os estágios de fraturamento analisados. Os gráficos são apresentados em conjunto com as séries temporais de vazão de injeção, pressão na superfície e concentração de propante, permitindo a avaliação integrada do comportamento do sinal DAS e das condições operacionais. Esses resultados complementam a análise apresentada na \autoref{item:aed}, cujo exemplo é mostrado na Figura \autoref{fig:mapa_calor_Var_vazao}.
 
   %   \begin{figure}
   %     \centering
