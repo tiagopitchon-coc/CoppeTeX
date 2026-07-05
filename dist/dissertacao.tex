@@ -570,7 +570,7 @@
   
   Na \autoref{fig:esctrograma_4s_S07F}, no espectrograma dos canais mais rasos, aparecem picos distintos em frequências em torno de 10 Hz e com possíveis harmônicos em frequências superiores. Os picos principais também podem ser observados no espectrograma dos canais mais profundos. Isto sugere a existência de uma excitação mecânica aproximadamente periódica possivelmente associada a bomba de injeção do fluido de fraturamento na superfície. Este caso é de interesse pois pode mostrar a importância da utilização de filtros para remover ruídos. Considerando a hipótese de que eles estejam relacionados a frequência da bomba e, portanto, sejam proporcionais à vazão de injeção, um modelo de redes neurais convolucionais treinado com o conjunto de dados sem filtro e de todo o intervalo do poço, poderia estar reportando a vazão a partir da frequência da bomba e não da turbulência do fluxo pelos canhoneados.
   
-  Além dos picos anteriores, também podem ser observados, no espectrograma dos canais mais profundos, um intervalo de frequências de maior conteúdo energético entre 2 e 8 Hz. Este intervalo estaria associado aos efeitos mecânicos do processo de fraturamento hidráulico, dado que os efeitos térmicos seriam mais aparentes abaixo de 0,5 Hz \citep{haavik_2023}.
+  Além dos picos anteriores, no espectrograma dos canais mais profundos, pode ser observado um intervalo de frequências de maior conteúdo energético entre 2 e 8 Hz. Este intervalo estaria associado aos efeitos mecânicos do processo de fraturamento hidráulico, dado que os efeitos térmicos seriam mais aparentes abaixo de 0,5 Hz \citep{haavik_2023}.
 
   \begin{figure}
       \centering
@@ -787,31 +787,31 @@
 
   Conforme descrito na \autoref{secao:ML}, foram avaliados os modelos da biblioteca Scikit-learn Ridge, RandomForestRegressor, ExtraTreesRegressor e HistGradientBoostingRegressor. Optou-se por utilizar os hiperparâmetros padrão dessas implementações, uma vez que o objetivo desta etapa é comparar a capacidade preditiva dos modelos e não realizar uma busca exaustiva pela melhor configuração possível. Duas versões de cada modelo foram criadas para analisar o impacto da pressão como variável de entrada. O atributo de energia, o número de canhoneados e a concentração de propante fazem parte da lista de variáveis de entrada em todos os casos.
   
-  Os modelos avaliados por meio de validação cruzada do tipo 4-fold, utilizando as métricas raiz do erro quadrático médio (RMSE em inglês) e erro absoluto médio (MAE em inglês), com os resultados compilados em forma de gráfico \textit{boxplot} na \autoref{fig:boxplot_rmse_mae}.
+  Os modelos avaliados por meio de validação cruzada do tipo 4-\textit{fold}, utilizando as métricas raiz do erro quadrático médio (RMSE em inglês) e erro absoluto médio (MAE em inglês), com os resultados compilados em forma de gráfico \textit{boxplot} na \autoref{fig:boxplot_rmse_mae}.
 
   \begin{figure}
       \centering
-      \includegraphics[width=0.9\linewidth]{dist/cap5/boxplot_rmse_mae.png}
-      \caption{Gráficos \textit{boxplot} das métricas raiz do erro quadrático médio (RMSE em inglês) e erro absoluto médio (MAE em inglês) dos modelos de aprendizado de máquina avaliados através de validação cruzada do tipo 4-fold. As cores azul e laranja se referem ao fato do modelo ter sido treinado tendo a pressão de injeção como variável de entrada ou não, respectivamente. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \includegraphics[width=1\linewidth]{dist/cap5/boxplot_rmse_mae.png}
+      \caption{Gráficos \textit{boxplot} das métricas raiz do erro quadrático médio (RMSE em inglês) e erro absoluto médio (MAE em inglês) dos modelos de aprendizado de máquina avaliados através de validação cruzada do tipo 4-\textit{fold}. As cores azul e laranja se referem ao fato do modelo ter sido treinado tendo a pressão de injeção como variável de entrada ou não, respectivamente. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
       \label{fig:boxplot_rmse_mae}
   \end{figure}
 
-  A análise destes gráficos sugere que a pressão de injeção possui contribuição limitada para as métricas globais de erro e que os modelos baseados em árvore de decisão possuem comportamentos similares. Porém, tendo em vista a observação feita na \autoref{secao:resultados_problema_direto} de que a pressão pode ajudar a reduzir a dispersão de dados em casos limítrofes de injeção, decidiu-se avaliar as curvas reais e previstas baseadas no modelo ExtraTreesRegressor para os estágios de validação de cada grupo 4-fold.
+  A análise destes gráficos sugere que a pressão de injeção possui contribuição limitada para as métricas globais de erro e que os modelos baseados em árvore de decisão possuem comportamentos similares. Porém, tendo em vista a observação feita na \autoref{secao:resultados_problema_direto} de que a pressão pode ajudar a reduzir a dispersão de dados em casos limítrofes de injeção, decidiu-se comparar as curvas reais e previstas geradas pelos modelos ExtraTreesRegressor para os estágios dos grupos de validação de cada iteração do 4-\textit{fold}.
   
-  A \autoref{fig:compara_pressao_s23f}, relativa ao estágio 23 do primeiro grupo de validação cruzada, ilustra como esta preocupação tem fundamento. O modelo treinado sem a pressão como variável de entrada não foi capaz de estimar vazão zero para os períodos sem fluxo. Isso não foi uma regra para todos os estágios, mas ocorreu com uma frequência alta para ser desprezado. Ou seja, embora as métricas agregadas indiquem efeito limitado da pressão, a inspeção visual das previsões revelou benefícios em situações específicas.
+  A \autoref{fig:compara_pressao_s23f}, relativa ao estágio 23 da primeira iteração 4-\textit{fold}, ilustra como esta preocupação tem fundamento. O modelo treinado sem a pressão como variável de entrada não foi capaz de estimar vazão zero para os períodos sem fluxo. Isso não foi uma regra para todos os estágios, mas ocorreu com uma frequência alta demais para ser desprezado. Ou seja, embora as métricas agregadas indiquem efeito limitado da pressão, a inspeção visual das previsões revelou benefícios em situações específicas.
 
   \begin{figure}
       \centering
       \includegraphics[width=0.7\linewidth]{dist/cap5/compara_pressao_s23f.png}
-      \caption{Curvas de vazão real e previstas do estágio 23 para modelos baseados no ExtraTreesRegressor cuja diferença é ter a pressão como variável de entrada. Os marcadores “1” apontam para intervalos onde não há fluxo no poço, mas o modelo sem a pressão estimar haver vazão. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
+      \caption{Curvas de vazão real e previstas do estágio 23 dos modelos ExtraTreesRegressor treinados na primeira iteração 4-\textit{fold}. A diferença entre eles é a inclusão da pressão de injeção como variável de entrada. Os marcadores “1” apontam para intervalos onde não há fluxo no poço, mas o modelo sem a pressão estima haver vazão. Figura elaborada pelo autor a partir de dados de \citet{mseel_site}.}
       \label{fig:compara_pressao_s23f}
   \end{figure}
 
   Por isso, escolheu-se o modelo de aprendizado de máquina ExtraTreesRegressor treinado com a pressão de injeção como variável de entrada como a melhor opção dentre as avaliadas para estimar a vazão de injeção a partir do atributo de energia do DAS. Este tipo de modelo foi selecionado por apresentar desempenho comparável aos melhores modelos avaliados, ao mesmo tempo em que possui uma estrutura relativamente simples e robusta.
   
-  Após retreinar o modelo com os estágios dos grupos de treino e validação combinados, o modelo foi avaliado com os estágios do grupo de teste obtendo uma média da raiz do erro quadrático médio de 4.73 bbl/min e uma média do erro absoluto médio de 2.60 bbl/min.
+  Após retreinar o modelo com os estágios dos grupos de treino e validação combinados, o modelo foi testado com os estágios do grupo de teste, obtendo uma média da raiz do erro quadrático médio de 4,73 bbl/min e uma média do erro absoluto médio de 2,60 bbl/min.
   
-  A \autoref{fig:vazao_inj_real_estimada_extra_trees} apresenta gráficos comparando as vazões reais e estimadas para os cinco estágios do grupo de testes. Pode-se observar que as curvas ficaram muito próximas e que o modelo conseguiu capturar o momento das variações de vazão sem atrasos, mesmo os picos esporádicos. As diferenças observadas podem estar associadas a fatores como: valores atípicos do atributo de energia, como identificado durante a análise dos modelos GAM; simplificações adotadas na modelagem, como a não erosão dos canhoneados, e; limitações inerentes ao conjunto de dados disponível, como a baixa frequência de aquisição do sinal.
+  A \autoref{fig:vazao_inj_real_estimada_extra_trees} apresenta gráficos comparando as vazões reais e estimadas para os cinco estágios do grupo de testes. Pode-se observar que as curvas ficaram muito próximas e que o modelo conseguiu capturar o momento das variações de vazão sem atrasos, mesmo em intervalos curtos e menos intensos. As diferenças observadas podem estar associadas a fatores como: valores atípicos do atributo de energia, como identificado durante a análise dos modelos GAM; simplificações adotadas na modelagem, como a não erosão dos canhoneados, e; limitações inerentes ao conjunto de dados disponível, como a baixa frequência de aquisição do sinal.
 
   \begin{figure}
       \centering
