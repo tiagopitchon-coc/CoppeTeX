@@ -566,7 +566,7 @@
       \label{fig:esctrograma_1s_S07F}
   \end{figure}
 
-  Porém, o pico de energia nas frequências mais baixas do espectrograma dos canais mais acima do poço, durante o período de fluxo, não era esperado. Por isso, o sinal foi reprocessado utilizando janelas de 4 segundos, aumentando a resolução espectral na faixa de baixas frequências e permitindo uma melhor visualização dos componentes entre 0 e 50 Hz, e apresentado na \autoref{fig:esctrograma_4s_S07F}.
+  Porém, o pico de PSD nas frequências mais baixas do espectrograma dos canais mais acima do poço, durante o período de fluxo, não era esperado. Por isso, o sinal foi reprocessado utilizando janelas de 4 segundos, aumentando a resolução espectral na faixa de baixas frequências e permitindo uma melhor visualização dos componentes entre 0 e 50 Hz, e apresentado na \autoref{fig:esctrograma_4s_S07F}.
   
   Na \autoref{fig:esctrograma_4s_S07F}, no espectrograma dos canais mais rasos, aparecem picos distintos em frequências em torno de 10 Hz e com possíveis harmônicos em frequências superiores. Os picos principais também podem ser observados no espectrograma dos canais mais profundos. Isto sugere a existência de uma excitação mecânica aproximadamente periódica possivelmente associada a bomba de injeção do fluido de fraturamento na superfície. Este caso é de interesse pois pode mostrar a importância da utilização de filtros para remover ruídos. Considerando a hipótese de que eles estejam relacionados a frequência da bomba e, portanto, sejam proporcionais à vazão de injeção, um modelo de redes neurais convolucionais treinado com o conjunto de dados sem filtro e de todo o intervalo do poço, poderia estar reportando a vazão a partir da frequência da bomba e não da turbulência do fluxo pelos canhoneados.
   
@@ -581,7 +581,7 @@
 
   Esperava-se encontrar intervalos de maior densidade espectral de potência em frequências intermediárias e altas que, conforme a revisão da literatura, estariam associadas ao escoamento turbulento em restrições. Tendo em vista que isto não ocorreu, foram extraídos atributos de energia do sinal bruto e com diferentes filtros aplicados visando avaliar qualitativamente qual faixa de frequência produzia um atributo de energia cuja evolução temporal apresentasse maior aderência à vazão reportada. Os atributos de energia foram extraídos em janelas de 1 segundo e agregados nos canais referentes a cada estágio. Os filtros testados estavam nas seguintes faixas de frequência: 50 a 200 Hz; 100 a 200 Hz; acima de 500 Hz e; acima de 700 Hz.
   
-  A \autoref{fig:filtros_diversos_S12F} apresenta essas séries temporais comparadas com a vazão de injeção de fluido com propante para o estágio 12. No atributo de energia extraído do sinal bruto DAS, observa-se um grande pico de energia no início da injeção que desaparece nas séries filtradas, estando provavelmente associado ao início da formação da fratura. Os filtros intermediários ainda não foram capazes de representar a curva de vazão de injeção de forma satisfatória. Em especial, com relação trechos iniciais menores de injeção e o final, onde há um aumento no valor de atributo de energia apesar da vazão constante. Os filtros passa-alta apresentaram um ótimo resultado, com comportamento aproximadamente proporcional à vazão reportada.
+  A \autoref{fig:filtros_diversos_S12F} apresenta essas séries temporais comparadas com a vazão de injeção de fluido com propante para o estágio 12. No atributo de energia extraído do sinal bruto DAS, observa-se um grande pico no atributo de energia no início da injeção que desaparece nas séries filtradas, estando provavelmente associado ao início da formação da fratura. Os filtros intermediários ainda não foram capazes de representar a curva de vazão de injeção de forma satisfatória. Em especial, com relação trechos iniciais menores de injeção e o final, onde há um aumento no valor de atributo de energia apesar da vazão constante. Os filtros passa-alta apresentaram um ótimo resultado, com comportamento aproximadamente proporcional à vazão reportada.
 
   % Os gráficos dos demais estágios estão presentes no Apêndice D.
 
@@ -823,10 +823,64 @@
   Os resultados obtidos indicam que o atributo de energia extraído do DAS contém informação suficiente para permitir a estimativa da vazão de injeção por meio de técnicas de aprendizado de máquina. A inclusão de variáveis complementares, como número de canhoneados, concentração de propante e pressão de injeção, contribuiu para melhorar a robustez dos modelos e reduzir ambiguidades associadas à interpretação do sinal.
   
   \chapter{Conclusões}
-  % Verificar:
-  % - Se tem lambdas, R2 mal formatados.
-  % - Boxplot sem estar em itálico.
-  % - Se sobrou overfitting em algum lugar.
+
+  O presente trabalho de mestrado tinha, como objetivo principal, avaliar a aplicabilidade do sensoriamento acústico distribuído (DAS em inglês) na estimativa de vazão de um escoamento através de restrições.
+  
+  Para isso, foi utilizada a base pública de dados do projeto MSEEL, que realizou testes de diferentes técnicas de fraturamento hidráulico no poço MIP-3H de um reservatório não convencional de gás. Considerou-se que a turbulência gerada pelo fluxo do fluido de fraturamento pelos canhoneados possuiria as características desejadas para este estudo e dados relevantes do projeto foram preservados e disponibilizados, como os parâmetros operacionais, o sinal DAS e as características do poço.
+
+  \section{Conclusões principais}
+
+  Ao longo do processo de análise do problema direto e da modelagem do problema inverso através de algoritmos de aprendizado de máquina, as seguintes conclusões podem ser listadas:
+
+  \begin{itemize}
+      \item Foi observada uma resposta vibro-acústica detectável pelo DAS associada ao escoamento turbulento através dos canhoneados.
+      \item A filtragem do sinal foi etapa fundamental para isolar fenômenos associados ao escoamento.
+      \item O atributo de energia extraído do DAS apresentou forte dependência estatística em relação à vazão de injeção.
+      \item O número de canhoneados mostrou-se um parâmetro essencial para interpretar a resposta acústica.
+      \item A concentração de propante demonstrou ser também influente, apesar de menos do que o número de canhoneados, tanto na informação mútua quanto nos modelos GAM.
+      \item A pressão de injeção apresentou papel secundário como variável de estado.
+      \item Modelos de aprendizado de máquina foram capazes de reproduzir a vazão com bons resultados.
+  \end{itemize}
+  
+  Com isso, conclui-se que o DAS pode ser utilizado para estimar a vazão de um escoamento monofásico através de restrições, desde que o sinal seja adequadamente processado e que informações complementares sobre a geometria da restrição e as características do fluido estejam disponíveis. Modelos de aprendizado de máquina se mostraram ferramentas poderosas para a captação das não linearidades do sistema, obtendo bons resultados nos testes realizados.
+  
+  Embora os resultados tenham sido obtidos a partir de dados de fraturamento hidráulico em um poço instrumentado atrás do revestimento, acredita-se que aplicações offshore em válvulas de controle de fluxo (ICV em inglês) representem um cenário ainda mais promissor. Nessas instalações, a fibra óptica encontra-se mais fortemente acoplada ao escoamento interno da coluna de produção, a geometria da restrição é mais bem conhecida e o sistema de aquisição pode ser configurado especificamente para monitoramento de fluxo, reduzindo fontes de interferência presentes nos dados analisados neste trabalho.
+
+  \section{Contribuições da dissertação}
+
+  A metodologia proposta permitiu trazer algumas contribuições relevantes para a aplicação do DAS no monitoramento de poços e de reservatórios, entre as quais:
+
+  \begin{itemize}
+      \item Proposição de uma nova aplicação para o atributo de energia, utilizando a soma das contribuições dos canais associados aos canhoneados para estimar a vazão total do estágio. Diferentemente dos trabalhos anteriores, focados principalmente no rateio de vazão entre fraturas, este trabalho investiga sua utilização para inferir a vazão global através da restrição.
+      \item Aplicação de técnicas de aprendizado de máquina baseadas em árvore de decisão para estimativa de vazão utilizando dados DAS do projeto MSEEL.
+      \item Desenvolvimento de um procedimento de seleção de filtros baseado em espectrogramas e na comparação entre atributo de energia e vazão.
+      \item Avaliação da influência da vazão, concentração de propante, pressão e geometria da restrição na resposta do DAS.
+      \item Uso de modelos GAM para interpretação física e estatística do problema.
+  \end{itemize}
+
+  \section{Limitações do estudo}
+
+  \begin{itemize}
+      \item A fibra foi instalada atrás do revestimento aderida as rochas através da cimentação, o que confere uma sensibilidade maior as deformações mecânicas do processo de fraturamento, altamente energético, do que fluxo turbulento em si, como pode ser constatado nos espectrogramas.
+      \item A fibra foi instalada de forma linear com folgas variadas entre os pontos de fixação, o que pode conferir resoluções espaciais distintas entre os estágios.
+      \item A frequência de aquisição dos dados ficou aquém da desejada para o sensoriamento acústico, conforme sugerido pelas propostas na literatura de banda de frequência para a aplicação de filtro.
+      \item Os canhoneados sofrem erosão durante o processo de fraturamento, o que pode resultar em desvios na resposta da fibra.
+  \end{itemize}
+
+  \section{Trabalhos futuros}
+
+  O conjunto de dados do poço MIP-3H, mesmo após tantos anos da sua disponibilização, ainda apresenta oportunidades de pesquisa. Com base nos resultados deste trabalho, é possível listar:
+
+  \begin{itemize}
+      \item Identificar o motivo da existência da faixa diagonal nos gráficos de variância pela profundidade e tempo na Figura 5.4.
+      \item Investigar a origem dos picos de PSD observados em frequências próximas de 10 Hz na Figura 5.6.
+      \item Investigar os valores altos de atributo de energia em casos de fluxo nulo da Figura 5.12.
+      \item Propor nova forma de caracterização da geometria, além do número de canhoneados, que permita entender melhor o efeito de intervalos restritos como o observado no estágio 17.
+      \item Investigar a origem dos resíduos elevados observados nos casos limítrofes da Figura 5.25 e os mecanismos pelos quais a pressão contribui para sua redução.
+      \item Avaliar o uso do DAS de baixa frequência para medir a variação de temperatura no poço, aproveitando o fato de que os dados do sensor distribuído de temperatura (DTS em inglês) também foram disponibilizados.
+  \end{itemize}
+
+  Os resultados obtidos neste trabalho indicam que existe potencial para a utilização do DAS na estimativa de vazão em poços offshore equipados com válvulas de controle de fluxo. Dessa forma, recomenda-se a realização de testes em instalações laboratoriais e em poços reais, visando validar a metodologia proposta em condições mais próximas das aplicações de campo e ampliar a compreensão dos fenômenos associados à resposta acústica do escoamento.
   
   \backmatter
 
